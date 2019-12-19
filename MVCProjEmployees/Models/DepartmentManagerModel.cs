@@ -1,0 +1,31 @@
+﻿using MVCProjEmployees.Utils;
+using OA.Web.Exceptions;
+using System;
+
+namespace MVCProjEmployees.Models
+{
+    public class DepartmentManagerModel
+    {
+        public int EmployeeNumber
+        {
+            get; set;
+        }
+        public string DepartmentNumber
+        {
+            get; set;
+        }
+        public DateTime FromDate
+        {
+            get; set;
+        }
+        public DateTime ToDate
+        {
+            get; set;
+        }
+
+        public override string ToString()
+        {
+            return $"Manager {EmployeeNumber}, Department {DepartmentNumber}, from {FromDate}, to {ToDate}.";
+        }
+    }
+}

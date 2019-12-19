@@ -1,0 +1,96 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+<div class="row main-body-page-header">
+    <div class="main-header-left-side">
+        <h2>Salaries</h2>
+        <i class="fa fa-search"></i>
+        <input class="input-search" type="text" placeholder="Search.." />
+    </div>
+    <div class="options-crumble-menu-option">
+        Delete
+    </div>
+    <button class="btn btn-primary btn-add-entity">
+        <span>Add salary</span>
+    </button>
+
+    <button class="btn-options-entity">
+        <i class="fa fa-ellipsis-v"></i>
+    </button>
+</div>
+
+<div class="row main-body-page-content animate-bottom">
+    <table class="table table-md main-body-page-table text-md-left">
+        <thead class="main-body-table-header">
+            <tr>
+                <th class="table-column-filter filter-employeeNumber"><span>Employee Number</span><button class="btn sort-btn"><i class="fa fa-angle-down"></i></button></th>
+                <th class="table-column-filter filter-employeeSalary"><span>Salary</span><button class="btn sort-btn"><i class="fa fa-angle-down"></i></button></th>
+                <th class="table-column-filter filter-fromDate"><span>Starting from</span><button class="btn sort-btn"><i class="fa fa-angle-down"></i></button></th>
+                <th class="table-column-filter filter-toDate"><span>Until</span><button class="btn sort-btn"><i class="fa fa-angle-down"></i></button></th>
+                <th><span>Delete</span></th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <div class="table-footer">
+        <button class="btn page-offset-left"><i class="fa fa-chevron-left"></i></button>
+        <div class="page-counter btn"><span class="page-counter-text">1</span></div>
+        <button class="btn page-offset-right"><i class="fa fa-chevron-right"></i></button>
+        <select class="form-control returned-records-dropdown">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15" selected>15</option>
+        </select>
+        <p class="select-label-text">items per page</p>
+    </div>
+</div>
+<div class="modal modal-create">
+    <div class=" modal-content">
+        <div class="modal-header">
+            <h3>Create Salary</h3>
+            <span class="close">&times;</span>
+        </div>
+        <div class="modal-row">
+            <p>Employee</p>
+            <input class="modal-input modal-input-salary-empNo form-control" type="text" />
+        </div>
+        <div class="modal-row">
+            <p>Salary</p>
+            <input class="modal-input modal-input-salary-salary form-control" type="text" />
+        </div>
+        <div class="modal-row">
+            <p>From</p>
+            <input class="modal-input modal-input-salary-from-date form-control datepicker" />
+        </div>
+        <div class="modal-row">
+            <p>To</p>
+            <label>Is current salary</label>
+            <input class="is-current-entity-checkbox is-current-salary-cb" type="checkbox" />
+            <input class="modal-input modal-input-salary-to-date form-control datepicker" />
+        </div>
+        <div class="modal-footer">
+            <div class="modal-error-zone"></div>
+            <button class="btn btn-primary btn-submit-entity"><span>Add</span></button>
+        </div>
+    </div>
+</div>
+<div class="modal modal-delete">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Delete Employee</h3>
+            <span class="close">&times;</span>
+        </div>
+        <div class="modal-row">
+            <p>You are about to <strong>DELETE</strong> the employee. This action cannot be undone and the data will be lost.</p>
+        </div>
+        <div class="modal-row">
+            <ul class="modal-deleted-entity-list">
+            </ul>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary btn-delete-entity"><span>Delete</span></button>
+        </div>
+    </div>
+</div>

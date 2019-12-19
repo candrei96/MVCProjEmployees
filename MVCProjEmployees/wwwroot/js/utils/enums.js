@@ -1,0 +1,17 @@
+﻿let ENTITY_TYPES = {
+    INVALID_ENTITY: 0,
+    EMPLOYEE: 1,
+    DEPARTMENT: 2,
+    SALARY: 3
+}
+
+let QUERY_TYPES = {
+    INVALID_QUERY: 0,
+    NORMAL_QUERY: 1,
+    SEARCH_QUERY: 2
+}
+
+Object.freeze(ENTITY_TYPES);
+Object.freeze(QUERY_TYPES);
+
+export { ENTITY_TYPES, QUERY_TYPES };

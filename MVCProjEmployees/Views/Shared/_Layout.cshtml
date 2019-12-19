@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - MVCProjEmployees</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <header class="box-shadow">
+        <div class="master-page-header ">
+            <h4>Human Resources</h4>
+        </div>
+    </header>
+    <div class="main-body-page">
+        <div class="main-navbar-page col-sm-2">
+            <ul class="nav-pills nav-style">
+                <li id="employees-tab" class="navbar-item active-navbar-item">
+                    <a>
+                        <p class="navbar-item-text navbar-item-text-active">Employees</p>
+                    </a>
+                </li>
+                <li id="departments-tab" class="navbar-item">
+                    <a>
+                        <p class="navbar-item-text">Departments</p>
+                    </a>
+                </li>
+                <li id="salaries-tab" class="navbar-item">
+                    <a>
+                        <p class="navbar-item-text">Salaries</p>
+                    </a>
+                </li>
+                <li id="reports-tab" class="navbar-item">
+                    <a>
+                        <p class="navbar-item-text">Reports</p>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="main-list-page col-sm-10">
+        </div>
+        <div class="loader"></div>
+    </div>
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script type="module" src="~/js/utils/constants.js" asp-append-version="true"></script>
+    <script type="module" src="~/js/utils/enums.js" asp-append-version="true"></script>
+    <script type="module" src="~/js/utils/utilityKit.js" asp-append-version="true"></script>
+    <script type="module" src="~/js/site.js" asp-append-version="true"></script>
+    <script type="module" src="~/js/pages/main-page-logic.js" asp-append-version="true"></script>
+    <script type="module" src="~/js/pages/employeePage.js" asp-append-version="true"></script>
+    <script type="module" src="~/js/pages/departmentPage.js" asp-append-version="true"></script>
+    <script type="module" src="~/js/api-controller.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

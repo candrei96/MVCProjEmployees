@@ -1,0 +1,102 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+<div class="row main-body-page-header">
+    <div class="main-header-left-side">
+        <h2>Employees</h2>
+        <i class="fa fa-search"></i>
+        <input class="input-search" type="text" placeholder="Search.." />
+    </div>
+    <div class="options-crumble-menu-option">
+        Delete
+    </div>
+    <button class="btn btn-primary btn-add-entity">
+        <span>Create Employee</span>
+    </button>
+
+    <button class="btn-options-entity">
+        <i class="fa fa-ellipsis-v"></i>
+    </button>
+</div>
+
+<div class="row main-body-page-content animate-bottom">
+    <table class="table table-md main-body-page-table text-md-left">
+        <thead class="main-body-table-header">
+            <tr>
+                <th class="table-column-filter filter-firstname"><span>Employee Name</span><button class="btn sort-btn"><i class="fa fa-angle-down"></i></button></th>
+                <th class="table-column-filter filter-employeenumber"><span>ID</span><button class="btn sort-btn"><i class="fa fa-angle-down"></i></button></th>
+                <th class="table-column-filter filter-gender"><span>Gender</span><button class="btn sort-btn"><i class="fa fa-angle-down"></i></button></th>
+                <th class="table-column-filter filter-birthdate"><span>Birth Date</span><button class="btn sort-btn"><i class="fa fa-angle-down"></i></button></th>
+                <th class="table-column-filter filter-hiredate"><span>Hire Date</span><button class="btn sort-btn"><i class="fa fa-angle-down"></i></button></th>
+                <th><span>Delete</span></th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <div class="table-footer">
+        <button class="btn page-offset-left"><i class="fa fa-chevron-left"></i></button>
+        <div class="page-counter btn"><span class="page-counter-text">1</span></div>
+        <button class="btn page-offset-right"><i class="fa fa-chevron-right"></i></button>
+        <select class="form-control returned-records-dropdown">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15" selected>15</option>
+        </select>
+        <p class="select-label-text">items per page</p>
+    </div>
+</div>
+<div class="modal modal-create">
+    <div class=" modal-content">
+        <div class="modal-header">
+            <h3>Create Employee</h3>
+            <span class="close">&times;</span>
+        </div>
+        <div class="modal-row">
+            <p>First Name</p>
+            <input class="modal-input modal-input-emp-first-name form-control" type="text" />
+        </div>
+        <div class="modal-row">
+            <p>Last Name</p>
+            <input class="modal-input modal-input-emp-last-name form-control" type="text" />
+        </div>
+        <div class="modal-row">
+            <p>Gender</p>
+            <select class="modal-input modal-input-emp-gender form-control">
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+            </select>
+        </div>
+        <div class="modal-row">
+            <p>Birth Date</p>
+            <input class="modal-input modal-input-emp-birth-date form-control datepicker" />
+        </div>
+        <div class="modal-row">
+            <p>Hire Date</p>
+            <input class="modal-input modal-input-emp-hire-date form-control datepicker" />
+        </div>
+        <div class="modal-footer">
+            <div class="modal-error-zone"></div>
+            <button class="btn btn-primary btn-submit-entity"><span>Add</span></button>
+        </div>
+    </div>
+</div>
+<div class="modal modal-delete">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Delete Employee</h3>
+            <span class="close">&times;</span>
+        </div>
+        <div class="modal-row">
+            <p>You are about to <strong>DELETE</strong> the employee. This action cannot be undone and the data will be lost.</p>
+        </div>
+        <div class="modal-row">
+            <ul class="modal-deleted-entity-list">
+            </ul>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary btn-delete-entity"><span>Delete</span></button>
+        </div>
+    </div>
+</div>
