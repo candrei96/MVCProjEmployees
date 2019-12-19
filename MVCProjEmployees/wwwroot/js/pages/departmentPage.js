@@ -1,4 +1,4 @@
-﻿import ApiController from '../api-controller.js';
+﻿import ApiController from '../plugins/api-controller.js';
 import constants from '../utils/constants.js';
 
 const apiController = ApiController.getInstance();

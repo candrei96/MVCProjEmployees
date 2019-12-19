@@ -1,0 +1,163 @@
+﻿import { ENTITY_TYPES } from '../utils/enums.js';
+import ApiController from './api-controller.js';
+
+const apiController = ApiController.getInstance();
+
+let tablePlugin = (function () {
+    function extendOptions(options, defaultOptions) {
+        let extendedObject = {};
+
+        const defaultOptionsKeys = Object.keys(defaultOptions);
+        defaultOptionsKeys.forEach((defaultOption) => {
+            extendedObject[defaultOption] = defaultOptions[defaultOption];
+        });
+
+        const optionsKeys = Object.keys(options);
+        optionsKeys.forEach((option) => {
+            if (Object.prototype.hasOwnProperty.call(defaultOptions, option)) {
+                extendedObject[option] = options[option];
+            }
+        });
+
+        return extendedObject;
+    }
+
+    function createTableHead(context) {
+        let tableHeading;
+
+        switch (context.LOADED_ENTITY) {
+            case ENTITY_TYPES.DEPARTMENT_EMPLOYEE:
+                tableHeading = `
+                <th>Department Name</th>
+                <th>Department Number</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Delete</th>
+                `;
+                break;
+            case ENTITY_TYPES.TITLE:
+                tableHeading = `
+                <th>Title</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Delete</th>
+                `;
+                break;
+            case ENTITY_TYPES.SALARY:
+                tableHeading = `
+                <th>Salary Amount</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Delete</th>
+                `;
+                break;
+            case ENTITY_TYPES.DEPARTMENT_MANAGER:
+                tableHeading = `
+                <th>Manager Name</th>
+                <th>Manager Number</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Delete</th>
+                `;
+                break;
+            default:
+                throw new Error('Invalid entity type.');
+        }
+
+        return tableHeading;
+    }
+
+    async function createTableBody(context) {
+        let tableBody;
+
+        switch (context.LOADED_ENTITY) {
+            case ENTITY_TYPES.DEPARTMENT_EMPLOYEE:
+                let departmentEmployees = await apiController.getDepartmentEmployees();
+
+                if (departmentEmployees && departmentEmployees.length > 0) {
+                    departmentEmployees.forEach((deptEmp) => {
+                        let departmentName = deptEmp.department ? deptEmp.department.departmentName : '';
+                        let departmentNumber = deptEmp.department ? deptEmp.department.departmentNumber : '';
+
+                        let tableRow = `
+                        <tr>
+                            <td>${departmentName}</td>
+                            <td>${departmentNumber}</td>
+                            <td>${deptEmp.fromDate.substring(0, 10)}</td>
+                            <td>${deptEmp.toDate.substring(0, 10)}</td>
+                            <td>Delete</td>
+                        </tr>
+                        `;
+                        tableBody += tableRow;
+                    });
+                }
+
+                break;
+            case ENTITY_TYPES.TITLE:
+
+                tableHeading = `
+                <td>Title</td>
+                <td>Start Date</td>
+                <td>End Date</td>
+                <td>Delete</td>
+                `;
+                break;
+            case ENTITY_TYPES.SALARY:
+                tableHeading = `
+                <td>Salary Amount</td>
+                <td>Start Date</td>
+                <td>End Date</td>
+                <td>Delete</td>
+                `;
+                break;
+            case ENTITY_TYPES.DEPARTMENT_MANAGER:
+                tableHeading = `
+                <td>Manager Name</td>
+                <td>Manager Number</td>
+                <td>Start Date</td>
+                <td>End Date</td>
+                <td>Delete</td>
+                `;
+                break;
+            default:
+                throw new Error('Invalid entity type.');
+        }
+
+        return tableBody;
+    }
+
+    async function createHtmlElement(context) {
+        let tableHeading = createTableHead(context);
+        let tableBody = await createTableBody(context);
+
+        const tableHtml = `
+        <table class="table">
+            <thead>${tableHeading}</thead>
+            <tbody>${tableBody}</tbody>
+        </table>
+        `;
+
+        $(context.options.ATTACH_SELECTOR)
+            .append(tableHtml);
+    }
+
+    function TablePlugin(options) {
+        this.defaultOptions = {
+            ATTACH_SELECTOR: null,
+            LOADED_ENTITY: null,
+            NUMBER_OF_COLUMNS
+        };
+
+        this.options = extendOptions(options, this.defaultOptions);  
+    }
+
+    async function initPlugin(options) {
+        const tablePlugin = new TablePlugin(options);
+
+        await createHtmlElement(tablePlugin);
+    }
+
+    return initPlugin;
+})();
+
+export default tablePlugin;

@@ -11,5 +11,13 @@ namespace OA.Data.Entities
         {
             get; set; 
         }
+        public Employee Employee
+        {
+            get; set;
+        }
+        public Department Department
+        {
+            get; set;
+        }
     }
 }

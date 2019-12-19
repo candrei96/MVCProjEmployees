@@ -1,4 +1,4 @@
-﻿import ApiController from '../api-controller.js';
+﻿import ApiController from '../plugins/api-controller.js';
 import constants from '../utils/constants.js';
 
 const apiController = ApiController.getInstance();
@@ -52,14 +52,33 @@ function navigationMenuItemClickHandler() {
     initEmployeePageListeners();
 }
 
+async function loadEmployeeDetails(uniqueIdentifiers) {
+    const employee = await apiController.getOneEmployee(uniqueIdentifiers);
+
+    if (!employee) return;
+
+    let gender = employee.employeeGender === 'M' ? 'Male' : 'Female';
+
+    $(".employee-top-header-name")
+        .append(`<span>${employee.firstName} ${employee.lastName}</span>`);
+
+    $(".employee-page-content.employee-page-content-details")
+        .append(`<div class="employee-page-info"><p class="employee-info-header">First Name</p><p class="employee-info-content">${employee.firstName}</p></div>`)
+        .append(`<div class="employee-page-info"><p class="employee-info-header">Last Name</p><p class="employee-info-content">${employee.lastName}</p></div>`)
+        .append(`<div class="employee-page-info"><p class="employee-info-header">Gender</p><p class="employee-info-content">${gender}</p></div>`)
+        .append(`<div class="employee-page-info"><p class="employee-info-header">Birth Date</p><p class="employee-info-content">${employee.birthDate.substring(0, 10)}</p></div>`)
+        .append(`<div class="employee-page-info"><p class="employee-info-header">Hire Date</p><p class="employee-info-content">${employee.hireDate.substring(0, 10)}</p></div>`);
+}
+
 function initEmployeePageListeners() {
     $(".employee-page .employee-page-header .employee-page-top .btn-trash-delete-entity").click(() => {
         
     });
 }
 
-export async function loadEmployeePage() {
+export async function loadEmployeePage(uniqueIdentifiers) {
     await apiController.loadHtmlPage(constants.EMPLOYEE_PAGE_RESOURCE);
+    await loadEmployeeDetails(uniqueIdentifiers);
 
     navigationMenuItemClickHandler();
 

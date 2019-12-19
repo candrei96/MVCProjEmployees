@@ -12,8 +12,8 @@ namespace MVCProjEmployees.Utils
         public static readonly string DepartmentModelDefaultFilter = "DepartmentNumber";
         public static readonly string TitleModelDefaultFilter = "EmployeeTitle";
         public static readonly string SalaryModelDefaultFilter = "EmployeeSalary";
-        public static readonly string DepartmentEmplyoeeDefaultFilter = "EmployeeNumber";
-        public static readonly string DepartmentManagerDefaultFilter = "EmployeeNumber";
+        public static readonly string DepartmentEmplyoeeDefaultFilter = "ToDate";
+        public static readonly string DepartmentManagerDefaultFilter = "ToDate";
 
         public static readonly string NotFoundMessage = "The searched entity was not found in the database. Please review your search criteria.";
         public static readonly string BadRequestMessage = "Request data is invalid. Please change to valid data.";

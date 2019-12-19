@@ -34,18 +34,32 @@ namespace OA.Service.Implementations
 
         public IEnumerable<DepartmentEmployee> GetDepartmentEmployeeByDepartmentNumber(string departmentNumber)
         {
-            return _departmentEmployeeRepository.GetAll().Where(prop => prop.DepartmentNumber == departmentNumber);
+            return _departmentEmployeeRepository
+                .GetAll()
+                .AsQueryable()
+                .Include(e => e.Employee)
+                .Include(e => e.Department)
+                .Where(prop => prop.DepartmentNumber == departmentNumber)
+                .AsEnumerable();
         }
 
         public IEnumerable<DepartmentEmployee> GetDepartmentEmployeeByEmployeeNumber(int employeeNumber)
         {
-            return _departmentEmployeeRepository.GetAll().Where(prop => prop.EmployeeNumber == employeeNumber);
+            return _departmentEmployeeRepository
+                .GetAll()
+                .AsQueryable()
+                .Include(e => e.Employee)
+                .Include(e => e.Department)
+                .Where(prop => prop.EmployeeNumber == employeeNumber)
+                .AsEnumerable();
         }
 
         public IQueryable<DepartmentEmployee> GetDepartmentEmployeeByFilters(int page, int pageSize, string sort, string filter)
         {
             return _departmentEmployeeRepository.GetAll()
                 .AsQueryable()
+                .Include(e => e.Employee)
+                .Include(e => e.Department)
                 .OrderByDynamic(filter, sort)
                 .Skip(page * pageSize)
                 .Take(pageSize);

@@ -26,6 +26,12 @@ namespace OA.Repo.MySql.Maps
                 .Property(prop => prop.FromDate)
                 .HasColumnName("from_date")
                 .HasColumnType("date");
+            entityTypeBuilder
+                .HasOne(prop => prop.Employee)
+                .WithMany();
+            entityTypeBuilder
+                .HasOne(prop => prop.Department)
+                .WithMany();
         }
     }
 }

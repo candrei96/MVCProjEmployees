@@ -478,9 +478,9 @@ header {
                 margin-top: -2.5%;
             }
 
-            .employee-page .employee-page-header .employee-page-top .btn-trash-delete-entity i {
-                transform: scaleY(1.25) scaleX(1.2);
-            }
+                .employee-page .employee-page-header .employee-page-top .btn-trash-delete-entity i {
+                    transform: scaleY(1.25) scaleX(1.2);
+                }
 
             .employee-page .employee-page-header .employee-page-top .employee-top-header-name {
                 display: inline-block;
@@ -500,6 +500,7 @@ header {
 
             .employee-page .employee-page-header .employee-page-navigation a:hover {
                 text-decoration: none;
+                cursor: pointer;
             }
 
             .employee-page .employee-page-header .employee-page-navigation .employee-nav-item {
@@ -528,11 +529,23 @@ header {
             padding: 2%;
         }
 
-            .employee-page .employee-page-content-details .employee-page-info p {
+            .employee-page .employee-page-content-details .employee-page-info .employee-info-header {
                 font-size: 22px;
-                font-weight: 350;
+                font-weight: 450;
                 margin: 0;
             }
+
+            .employee-page .employee-page-content-details .employee-page-info .employee-info-content {
+                font-size: 20px;
+                font-weight: 400;
+                color: mediumblue;
+                margin: 0;
+            }
+
+                .employee-page .employee-page-content-details .employee-page-info .employee-info-content:hover {
+                    text-decoration: underline;
+                    cursor: pointer;
+                }
 
     .employee-page .employee-page-content-departments {
         display: none;

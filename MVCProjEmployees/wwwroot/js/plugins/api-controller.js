@@ -1,7 +1,7 @@
-﻿import constants from './utils/constants.js';
-import { ENTITY_TYPES, QUERY_TYPES } from './utils/enums.js';
+﻿import constants from '../utils/constants.js';
+import { ENTITY_TYPES, QUERY_TYPES } from '../utils/enums.js';
 
-var controller = (function () {
+let controller = (function () {
     let instance;
 
     function ApiController(values) {
@@ -19,19 +19,53 @@ var controller = (function () {
         });
     }
 
+    ApiController.prototype.getDepartmentEmployees = async function (pathParameters) {
+        let computedUrl = `${this.options.API_URL}/api/departments/employees/employee-departments`;
+
+        pathParameters = pathParameters || {};
+
+        if (!pathParameters.employeeNumber) return;
+
+        computedUrl += `/${pathParameters.employeeNumber}`;
+
+        const resultedData = await $.ajax({
+            url: computedUrl,
+            contentType: 'application/json; charset=UTF-8',
+            method: 'GET'
+        });
+
+        return resultedData;
+    }
+
+    ApiController.prototype.getOneEmployee = async function (pathParameters) {
+        let computedUrl = `${this.options.API_URL}/api/employees`;
+
+        pathParameters = pathParameters || {};
+
+        if (!pathParameters.employeeNumber) return;
+
+        computedUrl += `/${pathParameters.employeeNumber}`;
+
+        const resultedData = await $.ajax({
+            url: computedUrl,
+            contentType: 'application/json; charset=UTF-8',
+            method: 'GET'
+        });
+
+        return resultedData;
+    }
+
     ApiController.prototype.getAllEmployees = async function (queryParameters) {
         let computedUrl = `${this.options.API_URL}/api/employees`;
 
         queryParameters = queryParameters || {};
 
-        if (queryParameters) {
-            queryParameters.page = queryParameters.page || 0;
-            queryParameters.pageSize = queryParameters.pageSize || 15;
-            queryParameters.filter = queryParameters.filter || '';
-            queryParameters.sort = queryParameters.sort || '';
+        queryParameters.page = queryParameters.page || 0;
+        queryParameters.pageSize = queryParameters.pageSize || 15;
+        queryParameters.filter = queryParameters.filter || '';
+        queryParameters.sort = queryParameters.sort || '';
 
-            computedUrl += `?page=${queryParameters.page}&pageSize=${queryParameters.pageSize}&filter=${queryParameters.filter}&sort=${queryParameters.sort}`;
-        }
+        computedUrl += `?page=${queryParameters.page}&pageSize=${queryParameters.pageSize}&filter=${queryParameters.filter}&sort=${queryParameters.sort}`;
 
         const resultedData = await $.ajax({
             url: computedUrl,
@@ -49,14 +83,12 @@ var controller = (function () {
 
         queryParameters = queryParameters || {};
 
-        if (queryParameters) {
-            queryParameters.page = queryParameters.page || 0;
-            queryParameters.pageSize = queryParameters.pageSize || 15;
-            queryParameters.filter = queryParameters.filter || '';
-            queryParameters.sort = queryParameters.sort || '';
+        queryParameters.page = queryParameters.page || 0;
+        queryParameters.pageSize = queryParameters.pageSize || 15;
+        queryParameters.filter = queryParameters.filter || '';
+        queryParameters.sort = queryParameters.sort || '';
 
-            computedUrl += `?page=${queryParameters.page}&pageSize=${queryParameters.pageSize}&filter=${queryParameters.filter}&sort=${queryParameters.sort}`;
-        }
+        computedUrl += `?page=${queryParameters.page}&pageSize=${queryParameters.pageSize}&filter=${queryParameters.filter}&sort=${queryParameters.sort}`;
 
         const resultedData = await $.ajax({
             url: computedUrl,
@@ -74,14 +106,12 @@ var controller = (function () {
 
         queryParameters = queryParameters || {};
 
-        if (queryParameters) {
-            queryParameters.page = queryParameters.page || 0;
-            queryParameters.pageSize = queryParameters.pageSize || 15;
-            queryParameters.filter = queryParameters.filter || '';
-            queryParameters.sort = queryParameters.sort || '';
+        queryParameters.page = queryParameters.page || 0;
+        queryParameters.pageSize = queryParameters.pageSize || 15;
+        queryParameters.filter = queryParameters.filter || '';
+        queryParameters.sort = queryParameters.sort || '';
 
-            computedUrl += `?page=${queryParameters.page}&pageSize=${queryParameters.pageSize}&filter=${queryParameters.filter}&sort=${queryParameters.sort}`;
-        }
+        computedUrl += `?page=${queryParameters.page}&pageSize=${queryParameters.pageSize}&filter=${queryParameters.filter}&sort=${queryParameters.sort}`;
 
         const resultedData = await $.ajax({
             url: computedUrl,
@@ -99,14 +129,12 @@ var controller = (function () {
 
         queryParameters = queryParameters || {};
 
-        if (queryParameters) {
-            queryParameters.page = queryParameters.page || 0;
-            queryParameters.pageSize = queryParameters.pageSize || 15;
-            queryParameters.filter = queryParameters.filter || '';
-            queryParameters.sort = queryParameters.sort || '';
+        queryParameters.page = queryParameters.page || 0;
+        queryParameters.pageSize = queryParameters.pageSize || 15;
+        queryParameters.filter = queryParameters.filter || '';
+        queryParameters.sort = queryParameters.sort || '';
 
-            computedUrl += `?page=${queryParameters.page}&pageSize=${queryParameters.pageSize}&filter=${queryParameters.filter}&sort=${queryParameters.sort}&searchString=${searchString}`;
-        }
+        computedUrl += `?page=${queryParameters.page}&pageSize=${queryParameters.pageSize}&filter=${queryParameters.filter}&sort=${queryParameters.sort}&searchString=${searchString}`;
 
         const resultedData = await $.ajax({
             url: computedUrl,
@@ -124,14 +152,12 @@ var controller = (function () {
 
         queryParameters = queryParameters || {};
 
-        if (queryParameters) {
-            queryParameters.page = queryParameters.page || 0;
-            queryParameters.pageSize = queryParameters.pageSize || 15;
-            queryParameters.filter = queryParameters.filter || '';
-            queryParameters.sort = queryParameters.sort || '';
+        queryParameters.page = queryParameters.page || 0;
+        queryParameters.pageSize = queryParameters.pageSize || 15;
+        queryParameters.filter = queryParameters.filter || '';
+        queryParameters.sort = queryParameters.sort || '';
 
-            computedUrl += `?page=${queryParameters.page}&pageSize=${queryParameters.pageSize}&filter=${queryParameters.filter}&sort=${queryParameters.sort}&searchString=${searchString}`;
-        }
+        computedUrl += `?page=${queryParameters.page}&pageSize=${queryParameters.pageSize}&filter=${queryParameters.filter}&sort=${queryParameters.sort}&searchString=${searchString}`;
 
         const resultedData = await $.ajax({
             url: computedUrl,
@@ -149,14 +175,12 @@ var controller = (function () {
 
         queryParameters = queryParameters || {};
 
-        if (queryParameters) {
-            queryParameters.page = queryParameters.page || 0;
-            queryParameters.pageSize = queryParameters.pageSize || 15;
-            queryParameters.filter = queryParameters.filter || '';
-            queryParameters.sort = queryParameters.sort || '';
+        queryParameters.page = queryParameters.page || 0;
+        queryParameters.pageSize = queryParameters.pageSize || 15;
+        queryParameters.filter = queryParameters.filter || '';
+        queryParameters.sort = queryParameters.sort || '';
 
-            computedUrl += `?page=${queryParameters.page}&pageSize=${queryParameters.pageSize}&filter=${queryParameters.filter}&sort=${queryParameters.sort}&searchString=${searchString}`;
-        }
+        computedUrl += `?page=${queryParameters.page}&pageSize=${queryParameters.pageSize}&filter=${queryParameters.filter}&sort=${queryParameters.sort}&searchString=${searchString}`;
 
         const resultedData = await $.ajax({
             url: computedUrl,
@@ -233,6 +257,6 @@ var controller = (function () {
             return instance;
         }
     }
-});
+})();
 
-export default controller();
+export default controller;

@@ -1,4 +1,4 @@
-﻿import ApiController from '../api-controller.js';
+﻿import ApiController from '../plugins/api-controller.js';
 import constants from '../utils/constants.js';
 import { ENTITY_TYPES, QUERY_TYPES } from '../utils/enums.js';
 import { calculateAge } from '../utils/utilityKit.js';
@@ -197,65 +197,6 @@ function addTableSortHandlers() {
     });
 }
 
-function addNavbarLogic() {
-    $(".navbar-item").click(async function () {
-        handleNavbarDesignClick(this);
-        await handleNavbarItemClick(this.getAttribute("id"));
-    });
-}
-function hideLoader() {
-    $(".loader").hide();
-    $(".main-body-page-content").show();
-}
-
-function showLoader() {
-    $(".loader").show();
-    $(".main-body-page-content").hide();
-}
-
-function crumbleButtonLoad() {
-    $(".btn-options-entity").click(function () {
-        if ($(".btn-options-entity")
-            .hasClass("active-more-options-dotted-btn")) {
-            $(".btn-options-entity")
-                .removeClass("active-more-options-dotted-btn");
-            $(".options-crumble-menu-option")
-                .hide();
-        } else {
-            $(".btn-options-entity")
-                .addClass("active-more-options-dotted-btn");
-            $(".options-crumble-menu-option")
-                .show();
-        }
-    });
-    $(".options-crumble-menu-option").click(() => {
-        let checkedCheckboxes = $('.table-delete-checkbox:checked').toArray();
-        if (checkedCheckboxes.length === 0) return;
-
-        const loadedEntity = window.sessionStorage.getItem(constants.STORAGE_SELECTED_ENTITY_KEY);
-
-        checkedCheckboxes.forEach((checkbox) => {
-            switch (parseInt(loadedEntity)) {
-                case ENTITY_TYPES.EMPLOYEE:
-                    $(".modal-deleted-entity-list").append(`<li>${checkbox.parentElement.parentElement.children[0].textContent}</li>`)
-                    break;
-                case ENTITY_TYPES.DEPARTMENT:
-                    $(".modal-deleted-entity-list").append(`<li>${checkbox.parentElement.parentElement.children[1].textContent}</li>`)
-                    break;
-                case ENTITY_TYPES.SALARY:
-                    $(".modal-deleted-entity-list")
-                        .append(`<li>${checkbox.parentElement.parentElement.children[0].textContent} ${checkbox.parentElement.parentElement.children[2].textContent}</li>`)
-                    break;
-                default:
-                    throw new Error('Invalid entity type.');
-                    break;
-            }
-        });
-
-        $(".modal-delete").show();
-    });
-}
-
 function dropdownChangeHandler() {
     $(".returned-records-dropdown").change(async function () {
         let queryParameters = {};
@@ -447,15 +388,6 @@ function pageOffsetClickHandlers() {
     });
 }
 
-function crumbleButtonUnload() {
-    $(".btn-options-entity").off("click");
-}
-
-function unloadLoadedPageLogic() {
-    showLoader();
-    crumbleButtonUnload();
-}
-
 function addEmployees(employees) {
     employees = employees || [];
     $(".main-body-page-table tbody").empty();
@@ -474,7 +406,11 @@ function addEmployees(employees) {
         $(`#main-table-data${i}`).append(`<td><input class="table-delete-checkbox form-check-input" type="checkbox" /></td>`);
 
         $(`#main-table-data${i}`).click(async () => {
-            await loadEmployeePage();
+            let uniqueIdentifiers = {};
+
+            uniqueIdentifiers.employeeNumber = employees[i].employeeNumber;
+
+            await loadEmployeePage(uniqueIdentifiers);
         });
     }
 
@@ -534,6 +470,74 @@ function addSalaries(salaries) {
     $('.table-delete-checkbox').on('change', function () {
         $('.table-delete-checkbox').not(this).prop('checked', false);
     });
+}
+
+function addNavbarLogic() {
+    $(".navbar-item").click(async function () {
+        handleNavbarDesignClick(this);
+        await handleNavbarItemClick(this.getAttribute("id"));
+    });
+}
+function hideLoader() {
+    $(".loader").hide();
+    $(".main-body-page-content").show();
+}
+
+function showLoader() {
+    $(".loader").show();
+    $(".main-body-page-content").hide();
+}
+
+function crumbleButtonLoad() {
+    $(".btn-options-entity").click(function () {
+        if ($(".btn-options-entity")
+            .hasClass("active-more-options-dotted-btn")) {
+            $(".btn-options-entity")
+                .removeClass("active-more-options-dotted-btn");
+            $(".options-crumble-menu-option")
+                .hide();
+        } else {
+            $(".btn-options-entity")
+                .addClass("active-more-options-dotted-btn");
+            $(".options-crumble-menu-option")
+                .show();
+        }
+    });
+    $(".options-crumble-menu-option").click(() => {
+        let checkedCheckboxes = $('.table-delete-checkbox:checked').toArray();
+        if (checkedCheckboxes.length === 0) return;
+
+        const loadedEntity = window.sessionStorage.getItem(constants.STORAGE_SELECTED_ENTITY_KEY);
+
+        checkedCheckboxes.forEach((checkbox) => {
+            switch (parseInt(loadedEntity)) {
+                case ENTITY_TYPES.EMPLOYEE:
+                    $(".modal-deleted-entity-list").append(`<li>${checkbox.parentElement.parentElement.children[0].textContent}</li>`)
+                    break;
+                case ENTITY_TYPES.DEPARTMENT:
+                    $(".modal-deleted-entity-list").append(`<li>${checkbox.parentElement.parentElement.children[1].textContent}</li>`)
+                    break;
+                case ENTITY_TYPES.SALARY:
+                    $(".modal-deleted-entity-list")
+                        .append(`<li>${checkbox.parentElement.parentElement.children[0].textContent} ${checkbox.parentElement.parentElement.children[2].textContent}</li>`)
+                    break;
+                default:
+                    throw new Error('Invalid entity type.');
+                    break;
+            }
+        });
+
+        $(".modal-delete").show();
+    });
+}
+
+function crumbleButtonUnload() {
+    $(".btn-options-entity").off("click");
+}
+
+function unloadLoadedPageLogic() {
+    showLoader();
+    crumbleButtonUnload();
 }
 
 function addEntityClickHandler() {
