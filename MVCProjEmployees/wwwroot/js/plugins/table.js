@@ -94,21 +94,38 @@ let tablePlugin = (function () {
 
                 break;
             case ENTITY_TYPES.TITLE:
+                let employeeTitles = await apiController.getTitlesByEmployeeNumber(context.LOADED_ENTITY_IDENTIFIERS.employeeNumber);
 
-                tableHeading = `
-                <td>Title</td>
-                <td>Start Date</td>
-                <td>End Date</td>
-                <td>Delete</td>
-                `;
+                if (employeeTitles && employeeTitles.length > 0) {
+                    employeeTitles.forEach((empTitle) => {
+                        let tableRow = `
+                        <tr>
+                            <td>${empTitle.title}</td>
+                            <td>${empTitle.fromDate.substring(0, 10)}</td>
+                            <td>${empTitle.toDate.substring(0, 10)}</td>
+                            <td>Delete</td>
+                        </tr>
+                        `;
+                        tableBody += tableRow;
+                    });
+                }
                 break;
             case ENTITY_TYPES.SALARY:
-                tableHeading = `
-                <td>Salary Amount</td>
-                <td>Start Date</td>
-                <td>End Date</td>
-                <td>Delete</td>
-                `;
+                let employeeSalaries = await apiController.getSalariesByEmployeeNumber(context.LOADED_ENTITY_IDENTIFIERS.employeeNumber);
+
+                if (employeeSalaries && employeeSalaries.length > 0) {
+                    employeeSalaries.forEach((empSalary) => {
+                        let tableRow = `
+                        <tr>
+                            <td>${empSalary.salary}</td>
+                            <td>${empSalary.fromDate.substring(0, 10)}</td>
+                            <td>${empSalary.toDate.substring(0, 10)}</td>
+                            <td>Delete</td>
+                        </tr>
+                        `;
+                        tableBody += tableRow;
+                    });
+                }
                 break;
             case ENTITY_TYPES.DEPARTMENT_MANAGER:
                 tableHeading = `
