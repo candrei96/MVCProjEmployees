@@ -4,16 +4,20 @@
 <div class="employee-page">
     <div class="employee-page-header">
         <div class="employee-page-top">
-            <button><span>Delete Employee</span></button>
+            <h2 class="employee-top-header-name">Employee Name</h2>
+            <button class="btn btn-primary btn-employee-entity-action"><span>Delete Employee</span></button>
+            <button class="btn-trash-delete-entity">
+                <i class="fa fa-trash"></i>
+            </button>
         </div>
-        <div class="employee-page-navigation">
-            <a class="employee-nav-item" href="#employeeDetails">Details</a>
-            <a class="employee-nav-item" href="#employeeDepartments">Departments</a>
-            <a class="employee-nav-item" href="#employeeTitles">Titles</a>
-            <a class="employee-nav-item" href="#employeeSalaries">Salaries</a>
-        </div>
+        <nav class="employee-page-navigation">
+            <a id="employee-details-nav-id" class="employee-nav-item">Details</a>
+            <a id="employee-departments-nav-id" class="employee-nav-item">Departments</a>
+            <a id="employee-titles-nav-id" class="employee-nav-item">Titles</a>
+            <a id="employee-salaries-nav-id" class="employee-nav-item">Salaries</a>
+        </nav>
     </div>
-    <div class="employee-page-content">
+    <div class="employee-page-content employee-page-content-details">
         <div class="employee-page-info">
             <p>First Name</p>
             <p>Test</p>
@@ -35,4 +39,12 @@
             <p>Test</p>
         </div>
     </div>
-</div>
+    <div class="employee-page-content employee-page-content-departments">
+
+    </div>
+    <div class="employee-page-content employee-page-content-titles">
+
+    </div>
+    <div class="employee-page-content employee-page-content-salaries">
+
+    </div>

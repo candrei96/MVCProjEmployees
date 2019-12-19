@@ -17,7 +17,11 @@ constantObject = {
     STORAGE_PAGE_COUNTER: "storage-page-counter-key",
     CURRENT_APPLIED_FILTER: "storage-current-applied-filter-key",
     CURRENT_APPLIED_SORT_ORDER: "storage-current-applied-sort-order-key",
-    LAST_QUERY_STATE: "storage-last-query-type"
+    LAST_QUERY_STATE: "storage-last-query-type",
+    EMPLOYEE_PAGE_NAV_DETAILS: "employee-details-nav-id",
+    EMPLOYEE_PAGE_NAV_DEPARTMENTS: "employee-departments-nav-id",
+    EMPLOYEE_PAGE_NAV_TITLES: "employee-titles-nav-id",
+    EMPLOYEE_PAGE_NAV_SALARIES: "employee-salaries-nav-id"
 };
 
 Object.freeze(constantObject);
