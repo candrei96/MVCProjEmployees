@@ -19,7 +19,7 @@ let controller = (function () {
         });
     }
 
-    ApiController.prototype.getDepartmentEmployees = async function (pathParameters) {
+    ApiController.prototype.getDepartmentEmployeesByEmployeeNumber = async function (pathParameters) {
         let computedUrl = `${this.options.API_URL}/api/departments/employees/employee-departments`;
 
         pathParameters = pathParameters || {};

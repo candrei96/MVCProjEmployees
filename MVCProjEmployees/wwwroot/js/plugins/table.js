@@ -72,7 +72,7 @@ let tablePlugin = (function () {
 
         switch (context.LOADED_ENTITY) {
             case ENTITY_TYPES.DEPARTMENT_EMPLOYEE:
-                let departmentEmployees = await apiController.getDepartmentEmployees();
+                let departmentEmployees = await apiController.getDepartmentEmployeesByEmployeeNumber(context.LOADED_ENTITY_IDENTIFIERS.employeeNumber);
 
                 if (departmentEmployees && departmentEmployees.length > 0) {
                     departmentEmployees.forEach((deptEmp) => {
@@ -143,9 +143,9 @@ let tablePlugin = (function () {
 
     function TablePlugin(options) {
         this.defaultOptions = {
-            ATTACH_SELECTOR: null,
-            LOADED_ENTITY: null,
-            NUMBER_OF_COLUMNS
+            ATTACH_SELECTOR: '',
+            LOADED_ENTITY: -1,
+            LOADED_ENTITY_IDENTIFIERS: {}
         };
 
         this.options = extendOptions(options, this.defaultOptions);  
