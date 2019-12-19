@@ -91,7 +91,6 @@ let tablePlugin = (function () {
                         tableBody += tableRow;
                     });
                 }
-
                 break;
             case ENTITY_TYPES.TITLE:
                 let employeeTitles = await apiController.getTitlesByEmployeeNumber(context.LOADED_ENTITY_IDENTIFIERS.employeeNumber);
@@ -128,13 +127,25 @@ let tablePlugin = (function () {
                 }
                 break;
             case ENTITY_TYPES.DEPARTMENT_MANAGER:
-                tableHeading = `
-                <td>Manager Name</td>
-                <td>Manager Number</td>
-                <td>Start Date</td>
-                <td>End Date</td>
-                <td>Delete</td>
-                `;
+                let departmentManagers = await apiController.getDepartmentManagersByEmployeeNumber(context.LOADED_ENTITY_IDENTIFIERS.employeeNumber);
+
+                if (departmentManagers && departmentManagers.length > 0) {
+                    departmentManagers.forEach((deptManager) => {
+                        let employeeName = deptManager.employee ? deptManager.employee.firstName + ' ' +deptManager.employee.lastName : '';
+                        let employeeNumber = deptManager.employee ? deptManager.employee.employeeNumber : '';
+
+                        let tableRow = `
+                        <tr>
+                            <td>${employeeName}</td>
+                            <td>${employeeNumber}</td>
+                            <td>${departmentManagers.fromDate.substring(0, 10)}</td>
+                            <td>${departmentManagers.toDate.substring(0, 10)}</td>
+                            <td>Delete</td>
+                        </tr>
+                        `;
+                        tableBody += tableRow;
+                    });
+                }
                 break;
             default:
                 throw new Error('Invalid entity type.');
@@ -153,6 +164,8 @@ let tablePlugin = (function () {
             <tbody>${tableBody}</tbody>
         </table>
         `;
+
+        if (!context.options.ATTACH_SELECTOR || context.options.ATTACH_SELECTOR === '') throw new Error("Invalid attach selector.");
 
         $(context.options.ATTACH_SELECTOR)
             .append(tableHtml);

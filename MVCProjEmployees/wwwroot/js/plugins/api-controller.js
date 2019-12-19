@@ -37,6 +37,24 @@ let controller = (function () {
         return resultedData;
     }
 
+    ApiController.prototype.getDepartmentManagersByEmployeeNumber = async function (pathParameters) {
+        let computedUrl = `${this.options.API_URL}/api/departments/managers/manager-departments`;
+
+        pathParameters = pathParameters || {};
+
+        if (!pathParameters.employeeNumber) return;
+
+        computedUrl += `/${pathParameters.employeeNumber}`;
+
+        const resultedData = await $.ajax({
+            url: computedUrl,
+            contentType: 'application/json; charset=UTF-8',
+            method: 'GET'
+        });
+
+        return resultedData;
+    }
+
     ApiController.prototype.getTitlesByEmployeeNumber = async function (pathParameters) {
         let computedUrl = `${this.options.API_URL}/api/employees`;
 
