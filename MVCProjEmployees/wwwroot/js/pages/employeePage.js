@@ -1,6 +1,9 @@
 ﻿import ApiController from '../plugins/api-controller.js';
 import constants from '../utils/constants.js';
 
+import tablePlugin from '../plugins/table.js';
+import { ENTITY_TYPES } from '../utils/enums.js';
+
 const apiController = ApiController.getInstance();
 
 function navigationMenuItemClickHandler() {
@@ -70,6 +73,16 @@ async function loadEmployeeDetails(uniqueIdentifiers) {
         .append(`<div class="employee-page-info"><p class="employee-info-header">Hire Date</p><p class="employee-info-content">${employee.hireDate.substring(0, 10)}</p></div>`);
 }
 
+async function loadEmployeeDepartments(uniqueIdentifiers) {
+    await tablePlugin({
+        ATTACH_SELECTOR: '.employee-page-content.employee-page-content-departments',
+        LOADED_ENTITY: ENTITY_TYPES.DEPARTMENT_EMPLOYEE,
+        LOADED_ENTITY_IDENTIFIERS: {
+            employeeNumber: uniqueIdentifiers.employeeNumber
+        }
+    });
+}
+
 function initEmployeePageListeners() {
     $(".employee-page .employee-page-header .employee-page-top .btn-trash-delete-entity").click(() => {
         
@@ -79,6 +92,7 @@ function initEmployeePageListeners() {
 export async function loadEmployeePage(uniqueIdentifiers) {
     await apiController.loadHtmlPage(constants.EMPLOYEE_PAGE_RESOURCE);
     await loadEmployeeDetails(uniqueIdentifiers);
+    await loadEmployeeDepartments(uniqueIdentifiers);
 
     navigationMenuItemClickHandler();
 

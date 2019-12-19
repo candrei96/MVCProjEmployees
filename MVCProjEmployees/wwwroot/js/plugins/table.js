@@ -25,7 +25,7 @@ let tablePlugin = (function () {
     function createTableHead(context) {
         let tableHeading;
 
-        switch (context.LOADED_ENTITY) {
+        switch (parseInt(context.options.LOADED_ENTITY)) {
             case ENTITY_TYPES.DEPARTMENT_EMPLOYEE:
                 tableHeading = `
                 <th>Department Name</th>
@@ -68,11 +68,11 @@ let tablePlugin = (function () {
     }
 
     async function createTableBody(context) {
-        let tableBody;
+        let tableBody = '';
 
-        switch (context.LOADED_ENTITY) {
+        switch (parseInt(context.options.LOADED_ENTITY)) {
             case ENTITY_TYPES.DEPARTMENT_EMPLOYEE:
-                let departmentEmployees = await apiController.getDepartmentEmployeesByEmployeeNumber(context.LOADED_ENTITY_IDENTIFIERS.employeeNumber);
+                let departmentEmployees = await apiController.getDepartmentEmployeesByEmployeeNumber(context.options.LOADED_ENTITY_IDENTIFIERS);
 
                 if (departmentEmployees && departmentEmployees.length > 0) {
                     departmentEmployees.forEach((deptEmp) => {
@@ -88,12 +88,13 @@ let tablePlugin = (function () {
                             <td>Delete</td>
                         </tr>
                         `;
+                        console.log(tableRow)
                         tableBody += tableRow;
                     });
                 }
                 break;
             case ENTITY_TYPES.TITLE:
-                let employeeTitles = await apiController.getTitlesByEmployeeNumber(context.LOADED_ENTITY_IDENTIFIERS.employeeNumber);
+                let employeeTitles = await apiController.getTitlesByEmployeeNumber(context.options.LOADED_ENTITY_IDENTIFIERS);
 
                 if (employeeTitles && employeeTitles.length > 0) {
                     employeeTitles.forEach((empTitle) => {
@@ -110,7 +111,7 @@ let tablePlugin = (function () {
                 }
                 break;
             case ENTITY_TYPES.SALARY:
-                let employeeSalaries = await apiController.getSalariesByEmployeeNumber(context.LOADED_ENTITY_IDENTIFIERS.employeeNumber);
+                let employeeSalaries = await apiController.getSalariesByEmployeeNumber(context.options.LOADED_ENTITY_IDENTIFIERS);
 
                 if (employeeSalaries && employeeSalaries.length > 0) {
                     employeeSalaries.forEach((empSalary) => {
@@ -127,7 +128,7 @@ let tablePlugin = (function () {
                 }
                 break;
             case ENTITY_TYPES.DEPARTMENT_MANAGER:
-                let departmentManagers = await apiController.getDepartmentManagersByEmployeeNumber(context.LOADED_ENTITY_IDENTIFIERS.employeeNumber);
+                let departmentManagers = await apiController.getDepartmentManagersByEmployeeNumber(context.options.LOADED_ENTITY_IDENTIFIERS);
 
                 if (departmentManagers && departmentManagers.length > 0) {
                     departmentManagers.forEach((deptManager) => {
@@ -167,7 +168,7 @@ let tablePlugin = (function () {
 
         if (!context.options.ATTACH_SELECTOR || context.options.ATTACH_SELECTOR === '') throw new Error("Invalid attach selector.");
 
-        $(context.options.ATTACH_SELECTOR)
+        $(`${context.options.ATTACH_SELECTOR}`)
             .append(tableHtml);
     }
 
