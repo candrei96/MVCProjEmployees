@@ -468,17 +468,31 @@ header {
         }
 
         .employee-page .employee-page-header .employee-page-navigation {
+            margin-left: -0.5%;
         }
 
             .employee-page .employee-page-header .employee-page-navigation .employee-nav-item {
+                margin-left: 3%;
             }
 
             .employee-page .employee-page-header .employee-page-navigation .employee-nav-item-active {
+                background-color: #FFFFFF;
+                border-bottom: 0;
+                border-left: 0.5px solid #D2D2D2;
+                border-right: 0.5px solid #D2D2D2;
+                border-top: 1px solid #007DBA;
             }
 
     .employee-page .employee-page-content {
         min-height: 800px;
     }
-    .employee-page .employee-page-content .employee-page-info {
-        padding: 2%;
-    }
+
+        .employee-page .employee-page-content .employee-page-info {
+            padding: 2%;
+        }
+
+            .employee-page .employee-page-content .employee-page-info p {
+                font-size: 22px;
+                font-weight: 350;
+                margin: 0;
+            }
