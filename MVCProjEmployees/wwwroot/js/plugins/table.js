@@ -22,7 +22,7 @@ let tablePlugin = (function () {
         return extendedObject;
     }
 
-    function addLeftOffsetHandler(context) {
+    function addOffsetHandlers(context) {
         $(".table-plugin-offset-left").click(async () => {
             const pageCount = window.sessionStorage.getItem(constants.STORAGE_PAGE_COUNTER);
             const currentFilter = window.sessionStorage.getItem(constants.CURRENT_APPLIED_FILTER);
@@ -30,7 +30,7 @@ let tablePlugin = (function () {
 
             let queryParameters = {};
 
-            queryParameters.pageSize = $(".returned-records-dropdown").val();
+            queryParameters.pageSize = $(".ui-table-plugin-dropdown").val();
             queryParameters.page = parseInt(pageCount) - 1;
             queryParameters.filter = currentFilter;
             queryParameters.sort = currentSortOrder;
@@ -43,10 +43,34 @@ let tablePlugin = (function () {
                 $(".table-plugin-counter-text").text(queryParameters.page + 1);
             }
         });
+        $(".table-plugin-offset-right").click(async () => {
+            if ($(".plugin-added-table-ui tbody")[0].rows.length <= 0) return;
+
+            const loadedEntity = window.sessionStorage.getItem(constants.STORAGE_SELECTED_ENTITY_KEY);
+            const pageCount = window.sessionStorage.getItem(constants.STORAGE_PAGE_COUNTER);
+            const currentFilter = window.sessionStorage.getItem(constants.CURRENT_APPLIED_FILTER);
+            const currentSortOrder = window.sessionStorage.getItem(constants.CURRENT_APPLIED_SORT_ORDER);
+
+            let queryParameters = {};
+            let data;
+
+            queryParameters.pageSize = $(".ui-table-plugin-dropdown").val();
+            queryParameters.page = parseInt(pageCount) + 1;
+            queryParameters.filter = currentFilter;
+            queryParameters.sort = currentSortOrder;
+
+            $(".plugin-added-table-ui tbody").empty();
+
+            data = await apiController.getEntity(loadedEntity, queryParameters);;
+            addEntityElement(loadedEntity, data);
+
+            window.sessionStorage.setItem(constants.STORAGE_PAGE_COUNTER, queryParameters.page);
+            $(".table-plugin-counter-text").text(queryParameters.page + 1);
+        });
     }
 
     function addTableListeners(context) {
-        addLeftOffsetHandler(context);
+        addOffsetHandlers(context);
     }
 
     function createTableHead(context) {
