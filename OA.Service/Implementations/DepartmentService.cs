@@ -95,5 +95,10 @@ namespace OA.Service.Implementations
                 .Skip(page * pageSize)
                 .Take(pageSize);
         }
+
+        public IQueryable<Department> GetDepartmentQuery()
+        {
+            return _departmentRepository.GetQuery();
+        }
     }
 }

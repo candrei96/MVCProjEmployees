@@ -65,6 +65,11 @@ namespace OA.Service.Implementations
                 .Take(pageSize);
         }
 
+        public IQueryable<DepartmentEmployee> GetDepartmentEmployeeQuery()
+        {
+            return _departmentEmployeeRepository.GetQuery();
+        }
+
         public IEnumerable<DepartmentEmployee> GetDepartmentEmployees()
         {
             return _departmentEmployeeRepository

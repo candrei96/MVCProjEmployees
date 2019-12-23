@@ -7,6 +7,7 @@ namespace OA.Service.Interfaces
 {
     public interface IDepartmentEmployeeService
     {
+        IQueryable<DepartmentEmployee> GetDepartmentEmployeeQuery();
         IEnumerable<DepartmentEmployee> GetDepartmentEmployees();
         IEnumerable<DepartmentEmployee> GetDepartmentEmployeeByEmployeeNumber(int employeeNumber);
         IEnumerable<DepartmentEmployee> GetDepartmentEmployeeByDepartmentNumber(string departmentNumber);

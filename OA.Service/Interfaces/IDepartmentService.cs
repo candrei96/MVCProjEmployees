@@ -6,6 +6,7 @@ namespace OA.Service.Interfaces
 {
     public interface IDepartmentService
     {
+        IQueryable<Department> GetDepartmentQuery();
         IEnumerable<Department> GetDepartments();
         IQueryable<Department> GetDepartmentsByFilters(int page, int pageSize, string sort, string filter);
         Department GetOneDepartment(string departmentNumber);

@@ -61,6 +61,11 @@ namespace OA.Service.Implementations
                 .Take(pageSize);
         }
 
+        public IQueryable<DepartmentManager> GetDepartmentManagerQuery()
+        {
+            return _deptManagerRepository.GetQuery();
+        }
+
         public IEnumerable<DepartmentManager> GetDepartmentManagers()
         {
             return _deptManagerRepository
