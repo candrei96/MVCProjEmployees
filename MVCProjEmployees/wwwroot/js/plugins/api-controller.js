@@ -69,6 +69,8 @@ let controller = (function () {
 
         if (!requestUrl) return;
 
+        requestUrl += `?page=${queryParameters.page}&pageSize=${queryParameters.pageSize}&filter=${queryParameters.filter}&sort=${queryParameters.sort}`;
+
         const resultedData = await $.ajax({
             url: requestUrl,
             contentType: 'application/json; charset=UTF-8',

@@ -117,6 +117,42 @@ body .main-body-page {
             margin-right: 1.5%;
         }
 
+        body .main-body-page .main-list-page .main-body-page-content .table-footer button {
+            border: 0.5px solid #E6E7EA;
+            background: #EBECEF;
+            float: left;
+            width: 3%;
+            padding: 0;
+            height: 2.5rem;
+        }
+
+        body .main-body-page .main-list-page .main-body-page-content .table-footer .returned-records-dropdown {
+            width: 8%;
+            height: 2.5rem;
+            margin-left: 4.5%;
+            display: inline-block;
+        }
+
+        body .main-body-page .main-list-page .main-body-page-content .table-footer .select-label-text {
+            display: inline-block;
+            margin-left: 1%;
+        }
+
+        body .main-body-page .main-list-page .main-body-page-content .table-footer .page-counter {
+            display: inline;
+            background-color: #004F7B;
+            float: left;
+            width: 3%;
+            height: 2.5rem;
+            padding: 0;
+            text-align: center;
+            line-height: 35px;
+        }
+
+            body .main-body-page .main-list-page .main-body-page-content .table-footer .page-counter span {
+                color: white;
+            }
+
         body .main-body-page .main-list-page .main-body-page-content .main-body-page-table {
             margin-bottom: 0;
         }
@@ -165,42 +201,6 @@ body .main-body-page {
 
             body .main-body-page .main-list-page .main-body-page-content .table .main-body-table-header .table-column-filter .sort-btn {
                 float: right;
-            }
-
-        body .main-body-page .main-list-page .main-body-page-content .table-footer button {
-            border: 0.5px solid #E6E7EA;
-            background: #EBECEF;
-            float: left;
-            width: 3%;
-            padding: 0;
-            height: 2.5rem;
-        }
-
-        body .main-body-page .main-list-page .main-body-page-content .table-footer .returned-records-dropdown {
-            width: 8%;
-            height: 2.5rem;
-            margin-left: 4.5%;
-            display: inline-block;
-        }
-
-        body .main-body-page .main-list-page .main-body-page-content .table-footer .select-label-text {
-            display: inline-block;
-            margin-left: 1%;
-        }
-
-        body .main-body-page .main-list-page .main-body-page-content .table-footer .page-counter {
-            display: inline;
-            background-color: #004F7B;
-            float: left;
-            width: 3%;
-            height: 2.5rem;
-            padding: 0;
-            text-align: center;
-            line-height: 35px;
-        }
-
-            body .main-body-page .main-list-page .main-body-page-content .table-footer .page-counter span {
-                color: white;
             }
 
         body .main-body-page .main-list-page .main-body-page-header .main-header-left-side {
@@ -562,30 +562,71 @@ header {
         min-height: 800px;
     }
 
-.plugin-added-table-ui {
+.plugin-added-table-ui-container {
     width: 90%;
     margin: 2%;
-    border: 1px solid #D2D2D2;
 }
 
-    .plugin-added-table-ui thead {
-        background-color: #F4F5F7;
+    .plugin-added-table-ui-container .plugin-added-table-ui {
+        border: 1px solid #D2D2D2;
     }
 
-    .plugin-added-table-ui thead tr th {
-        border: 1px solid #E9E9EB;
-    }
+        .plugin-added-table-ui-container .plugin-added-table-ui thead {
+            background-color: #F4F5F7;
+        }
 
-    .plugin-added-table-ui tbody tr {
-        border: 1px solid #E9E9EB;
-    }
+            .plugin-added-table-ui-container .plugin-added-table-ui thead tr th {
+                border: 1px solid #E9E9EB;
+            }
 
-    .plugin-added-table-ui tbody tr:hover {
-        background: #F5FBFF;
-        cursor: pointer;
-    }
+        .plugin-added-table-ui-container .plugin-added-table-ui tbody tr {
+            border: 1px solid #E9E9EB;
+        }
 
-    .plugin-added-table-ui tbody tr input[type=checkbox] {
-        margin-left: 10%;
-    }
-    
+            .plugin-added-table-ui-container .plugin-added-table-ui tbody tr:hover {
+                background: #F5FBFF;
+            }
+
+            .plugin-added-table-ui-container .plugin-added-table-ui tbody tr input[type=checkbox] {
+                margin-left: 10%;
+            }
+
+        .plugin-added-table-ui-container .table-plugin-footer-ui {
+
+        }
+
+            .plugin-added-table-ui-container .table-plugin-footer-ui button {
+                border: 0.5px solid #E6E7EA;
+                background: #EBECEF;
+                float: left;
+                width: 3%;
+                padding: 0;
+                height: 2.5rem;
+            }
+
+            .plugin-added-table-ui-container .table-plugin-footer-ui .ui-table-plugin-dropdown {
+                width: 8%;
+                height: 2.5rem;
+                margin-left: 4.5%;
+                display: inline-block;
+            }
+
+            .plugin-added-table-ui-container .table-plugin-footer-ui .select-label-text {
+                display: inline-block;
+                margin-left: 1%;
+            }
+
+            .plugin-added-table-ui-container .table-plugin-footer-ui .table-plugin-page-counter {
+                display: inline;
+                background-color: #004F7B;
+                float: left;
+                width: 3%;
+                height: 2.5rem;
+                padding: 0;
+                text-align: center;
+                line-height: 35px;
+            }
+
+                .plugin-added-table-ui-container .table-plugin-footer-ui .table-plugin-page-counter span {
+                    color: white;
+                }
