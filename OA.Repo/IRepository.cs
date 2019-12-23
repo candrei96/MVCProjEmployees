@@ -7,6 +7,7 @@ namespace OA.Repo
 {
     public interface IRepository<T> where T : BaseEntity
     {
+        IQueryable<T> GetQuery();
         IEnumerable<T> GetAll();
         IEnumerable<T> GetAll(int empNo);
         IEnumerable<T> GetAll(string deptNo);

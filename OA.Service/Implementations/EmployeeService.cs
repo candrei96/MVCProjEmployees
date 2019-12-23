@@ -37,6 +37,11 @@ namespace OA.Service.Implementations
             return _employeeRepository.GetAll();
         }
 
+        public IQueryable<Employee> GetEmployeesQuery()
+        {
+            return _employeeRepository.GetQuery();
+        }
+
         public Employee GetOneEmployee(int employeeNumber)
         {
             return _employeeRepository.GetOne(employeeNumber);

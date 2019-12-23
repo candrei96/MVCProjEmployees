@@ -14,5 +14,6 @@ namespace OA.Service.Interfaces
         void InsertTitle(Title title);
         void UpdateTitle(Title title);
         int DeleteTitle(int employeeNumber, string title, DateTime fromDate);
+        IQueryable<Title> GetTitlesByFiltersAndEmployeeNumber(int employeeNumber, int page, int pageSize, string sort, string filter);
     }
 }

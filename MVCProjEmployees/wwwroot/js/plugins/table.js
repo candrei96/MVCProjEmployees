@@ -1,4 +1,5 @@
 ﻿import { ENTITY_TYPES } from '../utils/enums.js';
+import constants from '../utils/constants.js';
 import ApiController from './api-controller.js';
 
 const apiController = ApiController.getInstance();
@@ -251,7 +252,7 @@ let tablePlugin = (function () {
         let tableFooter = createTableFooter();
 
         const tableHtml = `
-        <div class="plugin-added-table-ui-container">
+        <div class="plugin-added-table-ui-container animate-bottom">
             <table class="table plugin-added-table-ui">
                 <thead>${tableHeading}</thead>
                 <tbody>${tableBody}</tbody>

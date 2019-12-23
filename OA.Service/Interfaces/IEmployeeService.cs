@@ -7,6 +7,7 @@ namespace OA.Service.Interfaces
 {
     public interface IEmployeeService
     {
+        IQueryable<Employee> GetEmployeesQuery();
         IEnumerable<Employee> GetEmployees();
         IQueryable<Employee> GetEmployeesByFilters(int page, int pageSize, string sort, string filter);
         Employee GetOneEmployee(int employeeNumber);

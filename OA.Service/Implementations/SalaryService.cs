@@ -39,7 +39,12 @@ namespace OA.Service.Implementations
 
         public IEnumerable<Salary> GetSalariesByEmployeeNumber(int employeeNumber)
         {
-            return _salaryRepository.GetAll().Where(prop => prop.EmployeeNumber == employeeNumber);
+            return _salaryRepository
+                .GetAll()
+                .AsQueryable()
+                .Include(s => s.Employee)
+                .AsEnumerable()
+                .Where(prop => prop.EmployeeNumber == employeeNumber);
         }
 
         public Salary GetOneSalary(int employeeNumber, DateTime fromDate)
@@ -77,6 +82,17 @@ namespace OA.Service.Implementations
                 .AsQueryable()
                 .Include(s => s.Employee)
                 .OrderByDynamic(filter, sort)
+                .Skip(page * pageSize)
+                .Take(pageSize);
+        }
+
+        public IQueryable<Salary> GetSalariesByFiltersAndEmployeeNumber(int employeeNumber, int page, int pageSize, string sort, string filter)
+        {
+            return _salaryRepository.GetAll()
+                .AsQueryable()
+                .Include(s => s.Employee)
+                .OrderByDynamic(filter, sort)
+                .Where(e => e.EmployeeNumber == employeeNumber)
                 .Skip(page * pageSize)
                 .Take(pageSize);
         }

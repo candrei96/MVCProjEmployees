@@ -80,16 +80,24 @@ namespace MVCProjEmployees.Controllers
         [HttpGet("{empNo}/salaries")]
         public IActionResult GetSalariesByEmployeeNumber(
             [FromQuery] bool currentSalaries,
+            [FromQuery] int page,
+            [FromQuery] int pageSize,
+            [FromQuery(Name = "sort")] string sort,
+            [FromQuery(Name = "filter")] string filter,
             int empNo
             )
         {
             try
             {
+                page = (page <= 0) ? Constants.PageDefaultOffset : page;
+                pageSize = (pageSize <= 0) ? Constants.PageDefaultLimit : pageSize;
+                sort = sort ?? Constants.PageDefaultSort;
+                filter = filter ?? Constants.SalaryModelDefaultFilter;
+
                 List<SalaryModel> salaryModels = new List<SalaryModel>();
 
                 _salaryService
-                    .GetSalaries()
-                    .Where(s => s.EmployeeNumber == empNo)
+                    .GetSalariesByFiltersAndEmployeeNumber(empNo, page, pageSize, sort, filter)
                     .ToList()
                     .ForEach(foundSalary =>
                     {
@@ -358,19 +366,28 @@ namespace MVCProjEmployees.Controllers
             }
         }
 
+
         [HttpGet("{empNo}/titles")]
         public IActionResult GetTitlesByEmployeeNumber(
             [FromQuery] bool currentTitles,
+            [FromQuery] int page,
+            [FromQuery] int pageSize,
+            [FromQuery(Name = "sort")] string sort,
+            [FromQuery(Name = "filter")] string filter,
             int empNo
             )
         {
             try
             {
+                page = (page <= 0) ? Constants.PageDefaultOffset : page;
+                pageSize = (pageSize <= 0) ? Constants.PageDefaultLimit : pageSize;
+                sort = sort ?? Constants.PageDefaultSort;
+                filter = filter ?? Constants.TitleModelDefaultFilter;
+
                 List<TitleModel> titleModels = new List<TitleModel>();
 
                 _titleService
-                    .GetTitles()
-                    .Where(t => t.EmployeeNumber == empNo)
+                    .GetTitlesByFiltersAndEmployeeNumber(empNo, page, pageSize, sort, filter)
                     .ToList().ForEach(foundTitle =>
                     {
                         TitleModel t = new TitleModel
@@ -634,6 +651,53 @@ namespace MVCProjEmployees.Controllers
                 filter = filter ?? Constants.EmployeeModelDefaultFilter;
 
                 List<EmployeeModel> employeeList = new List<EmployeeModel>();
+
+                //IQueryable<Employee> myQuery =
+                //    _employeeService
+                //    .GetEmployeesQuery();
+
+                //if (true)
+                //{
+                //    myQuery = 
+                //        myQuery
+                //            .Where(e =>
+                //                e.FirstName.ToUpper().Contains(searchString.ToUpper())
+                //                || e.LastName.ToUpper().Contains(searchString.ToUpper())
+                //                || e.Gender.ToUpper().Contains(searchString.ToUpper())
+                //                || (e.BirthDate.Year.ToString() + "-" + e.BirthDate.Month.ToString() + "-" + e.BirthDate.Day.ToString()).Contains(searchString)
+                //                || (e.HireDate.Year.ToString() + "-" + e.HireDate.Month.ToString() + "-" + e.HireDate.Day.ToString()).Contains(searchString)
+                //                );
+                //}
+                //else
+                //{
+                //    //to do
+                //    myQuery = 
+                //        myQuery
+                //            .Where(e =>
+                //                e.FirstName.ToUpper().Contains(searchString.ToUpper())
+                //                || e.LastName.ToUpper().Contains(searchString.ToUpper())
+                //                || e.Gender.ToUpper().Contains(searchString.ToUpper())
+                //                || (e.BirthDate.Year.ToString() + "-" + e.BirthDate.Month.ToString() + "-" + e.BirthDate.Day.ToString()).Contains(searchString)
+                //                || (e.HireDate.Year.ToString() + "-" + e.HireDate.Month.ToString() + "-" + e.HireDate.Day.ToString()).Contains(searchString)
+                //                );
+                //}
+
+                //var a = 0;
+
+                //employeeList =
+                //    myQuery
+                //        .Select(e => new EmployeeModel
+                //        {
+                //            EmployeeNumber = e.EmployeeNumber,
+                //            FirstName = e.FirstName,
+                //            LastName = e.LastName,
+                //            EmployeeGender = e.Gender,
+                //            BirthDate = e.BirthDate,
+                //            HireDate = e.HireDate
+                //        })
+                //        .ToList();
+
+                //var b = 0;
 
                 if (int.TryParse(searchString, out _))
                 {

@@ -14,5 +14,6 @@ namespace OA.Service.Interfaces
         void InsertSalary(Salary salary);
         void UpdateSalary(Salary salary);
         int DeleteSalary(int employeeNumber, DateTime fromDate);
+        IQueryable<Salary> GetSalariesByFiltersAndEmployeeNumber(int employeeNumber, int page, int pageSize, string sort, string filter);
     }
 }

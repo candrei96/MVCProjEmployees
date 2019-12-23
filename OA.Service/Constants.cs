@@ -10,7 +10,7 @@ namespace MVCProjEmployees.Utils
 
         public static readonly string EmployeeModelDefaultFilter = "HireDate";
         public static readonly string DepartmentModelDefaultFilter = "DepartmentNumber";
-        public static readonly string TitleModelDefaultFilter = "EmployeeTitle";
+        public static readonly string TitleModelDefaultFilter = "Title";
         public static readonly string SalaryModelDefaultFilter = "EmployeeSalary";
         public static readonly string DepartmentEmplyoeeDefaultFilter = "ToDate";
         public static readonly string DepartmentManagerDefaultFilter = "ToDate";

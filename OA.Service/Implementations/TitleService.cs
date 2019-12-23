@@ -30,7 +30,12 @@ namespace OA.Service.Implementations
 
         public IEnumerable<Title> GetTitlesByEmployeeNumber(int employeeNumber)
         {
-            return _titleRepository.GetAll().Where(prop => prop.EmployeeNumber == employeeNumber);
+            return _titleRepository
+                .GetAll()
+                .AsQueryable()
+                .Include(t => t.Employee)
+                .AsEnumerable()
+                .Where(prop => prop.EmployeeNumber == employeeNumber);
         }
 
         public Title GetOneTitle(int employeeNumber, string title, DateTime fromDate)
@@ -78,6 +83,17 @@ namespace OA.Service.Implementations
                 .AsQueryable()
                 .Include(t => t.Employee)
                 .OrderByDynamic(filter, sort)
+                .Skip(page * pageSize)
+                .Take(pageSize);
+        }
+
+        public IQueryable<Title> GetTitlesByFiltersAndEmployeeNumber(int employeeNumber, int page, int pageSize, string sort, string filter)
+        {
+            return _titleRepository.GetAll()
+                .AsQueryable()
+                .Include(s => s.Employee)
+                .OrderByDynamic(filter, sort)
+                .Where(e => e.EmployeeNumber == employeeNumber)
                 .Skip(page * pageSize)
                 .Take(pageSize);
         }

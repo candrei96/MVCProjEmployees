@@ -83,6 +83,26 @@ async function loadEmployeeDepartments(uniqueIdentifiers) {
     });
 }
 
+async function loadEmployeeTitles(uniqueIdentifiers) {
+    await tablePlugin({
+        ATTACH_SELECTOR: '.employee-page-content.employee-page-content-titles',
+        LOADED_ENTITY: ENTITY_TYPES.TITLE,
+        LOADED_ENTITY_IDENTIFIERS: {
+            employeeNumber: uniqueIdentifiers.employeeNumber
+        }
+    });
+}
+
+async function loadEmployeeSalaries(uniqueIdentifiers) {
+    await tablePlugin({
+        ATTACH_SELECTOR: '.employee-page-content.employee-page-content-salaries',
+        LOADED_ENTITY: ENTITY_TYPES.SALARY,
+        LOADED_ENTITY_IDENTIFIERS: {
+            employeeNumber: uniqueIdentifiers.employeeNumber
+        }
+    });
+}
+
 function initEmployeePageListeners() {
     $(".employee-page .employee-page-header .employee-page-top .btn-trash-delete-entity").click(() => {
         
@@ -93,6 +113,8 @@ export async function loadEmployeePage(uniqueIdentifiers) {
     await apiController.loadHtmlPage(constants.EMPLOYEE_PAGE_RESOURCE);
     await loadEmployeeDetails(uniqueIdentifiers);
     await loadEmployeeDepartments(uniqueIdentifiers);
+    await loadEmployeeTitles(uniqueIdentifiers);
+    await loadEmployeeSalaries(uniqueIdentifiers);
 
     navigationMenuItemClickHandler();
 

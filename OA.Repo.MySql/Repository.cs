@@ -18,6 +18,11 @@ namespace OA.Repo.Classes
             entities = _context.Set<T>();
         }
 
+        public IQueryable<T> GetQuery()
+        {
+            return entities.AsQueryable();
+        }
+
         public IEnumerable<T> GetAll()
         {
             return entities.AsEnumerable();
