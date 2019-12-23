@@ -20,7 +20,7 @@ let controller = (function () {
     }
 
     ApiController.prototype.getDepartmentEmployeesByEmployeeNumber = async function (pathParameters) {
-        let computedUrl = `${this.options.API_URL}/api/employees/employee-departments`;
+        let computedUrl = `${this.options.API_URL}/api/departments/employees/employee-departments`;
 
         pathParameters = pathParameters || {};
 
@@ -114,10 +114,10 @@ let controller = (function () {
 
         queryParameters = queryParameters || {};
 
-        queryParameters.page = queryParameters.page || 0;
-        queryParameters.pageSize = queryParameters.pageSize || 15;
-        queryParameters.filter = queryParameters.filter || '';
-        queryParameters.sort = queryParameters.sort || '';
+        queryParameters.page = queryParameters.page || constants.QUERY_PARAMETER_DEFAULT_PAGE;
+        queryParameters.pageSize = queryParameters.pageSize || constants.QUERY_PARAMETER_DEFAULT_PAGE_SIZE;
+        queryParameters.filter = queryParameters.filter || constants.QUERY_PARAMETER_DEFAULT_FILTER;
+        queryParameters.sort = queryParameters.sort || constants.QUERY_PARAMETER_DEFAULT_SORT;
 
         computedUrl += `?page=${queryParameters.page}&pageSize=${queryParameters.pageSize}&filter=${queryParameters.filter}&sort=${queryParameters.sort}`;
 
@@ -137,10 +137,10 @@ let controller = (function () {
 
         queryParameters = queryParameters || {};
 
-        queryParameters.page = queryParameters.page || 0;
-        queryParameters.pageSize = queryParameters.pageSize || 15;
-        queryParameters.filter = queryParameters.filter || '';
-        queryParameters.sort = queryParameters.sort || '';
+        queryParameters.page = queryParameters.page || constants.QUERY_PARAMETER_DEFAULT_PAGE;
+        queryParameters.pageSize = queryParameters.pageSize || constants.QUERY_PARAMETER_DEFAULT_PAGE_SIZE;
+        queryParameters.filter = queryParameters.filter || constants.QUERY_PARAMETER_DEFAULT_FILTER;
+        queryParameters.sort = queryParameters.sort || constants.QUERY_PARAMETER_DEFAULT_SORT;
 
         computedUrl += `?page=${queryParameters.page}&pageSize=${queryParameters.pageSize}&filter=${queryParameters.filter}&sort=${queryParameters.sort}`;
 
@@ -160,10 +160,10 @@ let controller = (function () {
 
         queryParameters = queryParameters || {};
 
-        queryParameters.page = queryParameters.page || 0;
-        queryParameters.pageSize = queryParameters.pageSize || 15;
-        queryParameters.filter = queryParameters.filter || '';
-        queryParameters.sort = queryParameters.sort || '';
+        queryParameters.page = queryParameters.page || constants.QUERY_PARAMETER_DEFAULT_PAGE;
+        queryParameters.pageSize = queryParameters.pageSize || constants.QUERY_PARAMETER_DEFAULT_PAGE_SIZE;
+        queryParameters.filter = queryParameters.filter || constants.QUERY_PARAMETER_DEFAULT_FILTER;
+        queryParameters.sort = queryParameters.sort || constants.QUERY_PARAMETER_DEFAULT_SORT;
 
         computedUrl += `?page=${queryParameters.page}&pageSize=${queryParameters.pageSize}&filter=${queryParameters.filter}&sort=${queryParameters.sort}`;
 
@@ -178,66 +178,33 @@ let controller = (function () {
         return resultedData;
     }
 
-    ApiController.prototype.searchEmployee = async function (queryParameters, searchString) {
-        let computedUrl = `${this.options.API_URL}/api/employees/search`;
-
+    ApiController.prototype.searchEntity = async function (entityType, queryParameters, searchString) {
+        let requestUrl;
         queryParameters = queryParameters || {};
 
-        queryParameters.page = queryParameters.page || 0;
-        queryParameters.pageSize = queryParameters.pageSize || 15;
-        queryParameters.filter = queryParameters.filter || '';
-        queryParameters.sort = queryParameters.sort || '';
+        queryParameters.page = queryParameters.page || constants.QUERY_PARAMETER_DEFAULT_PAGE;
+        queryParameters.pageSize = queryParameters.pageSize || constants.QUERY_PARAMETER_DEFAULT_PAGE_SIZE;
+        queryParameters.filter = queryParameters.filter || constants.QUERY_PARAMETER_DEFAULT_FILTER;
+        queryParameters.sort = queryParameters.sort || constants.QUERY_PARAMETER_DEFAULT_SORT;
 
-        computedUrl += `?page=${queryParameters.page}&pageSize=${queryParameters.pageSize}&filter=${queryParameters.filter}&sort=${queryParameters.sort}&searchString=${searchString}`;
+        switch (parseInt(entityType)) {
+            case ENTITY_TYPES.EMPLOYEE:
+                requestUrl = `${this.options.API_URL}/api/employees/search`;
+                break;
+            case ENTITY_TYPES.DEPARTMENT:
+                requestUrl = `${this.options.API_URL}/api/departments/search`;
+                break;
+            case ENTITY_TYPES.SALARY:
+                requestUrl = `${this.options.API_URL}/api/employees/salaries/search`;
+                break;
+            default:
+                throw new Error('Invalid entity type.');
+        }
 
-        const resultedData = await $.ajax({
-            url: computedUrl,
-            contentType: 'application/json; charset=UTF-8',
-            method: 'GET'
-        });
-
-        window.sessionStorage.setItem(constants.LAST_QUERY_STATE, QUERY_TYPES.SEARCH_QUERY);
-
-        return resultedData;
-    }
-
-    ApiController.prototype.searchDepartment = async function (queryParameters, searchString) {
-        let computedUrl = `${this.options.API_URL}/api/departments/search`;
-
-        queryParameters = queryParameters || {};
-
-        queryParameters.page = queryParameters.page || 0;
-        queryParameters.pageSize = queryParameters.pageSize || 15;
-        queryParameters.filter = queryParameters.filter || '';
-        queryParameters.sort = queryParameters.sort || '';
-
-        computedUrl += `?page=${queryParameters.page}&pageSize=${queryParameters.pageSize}&filter=${queryParameters.filter}&sort=${queryParameters.sort}&searchString=${searchString}`;
+        requestUrl += `?page=${queryParameters.page}&pageSize=${queryParameters.pageSize}&filter=${queryParameters.filter}&sort=${queryParameters.sort}&searchString=${searchString}`;
 
         const resultedData = await $.ajax({
-            url: computedUrl,
-            contentType: 'application/json; charset=UTF-8',
-            method: 'GET'
-        });
-
-        window.sessionStorage.setItem(constants.LAST_QUERY_STATE, QUERY_TYPES.SEARCH_QUERY);
-
-        return resultedData;
-    }
-
-    ApiController.prototype.searchSalary = async function (queryParameters, searchString) {
-        let computedUrl = `${this.options.API_URL}/api/employees/salaries/search`;
-
-        queryParameters = queryParameters || {};
-
-        queryParameters.page = queryParameters.page || 0;
-        queryParameters.pageSize = queryParameters.pageSize || 15;
-        queryParameters.filter = queryParameters.filter || '';
-        queryParameters.sort = queryParameters.sort || '';
-
-        computedUrl += `?page=${queryParameters.page}&pageSize=${queryParameters.pageSize}&filter=${queryParameters.filter}&sort=${queryParameters.sort}&searchString=${searchString}`;
-
-        const resultedData = await $.ajax({
-            url: computedUrl,
+            url: requestUrl,
             contentType: 'application/json; charset=UTF-8',
             method: 'GET'
         });
@@ -260,7 +227,7 @@ let controller = (function () {
                 requestUrl = `${this.options.API_URL}/api/employees/salaries`;
                 break;
             default:
-                throw new Error("Invalid entity type.");
+                throw new Error('Invalid entity type.');
         }
 
         await $.ajax({
@@ -292,7 +259,7 @@ let controller = (function () {
                 requestUrl = `${this.options.API_URL}/api/employees/${keyObject.employeeNumber}/salaries/startDate/${keyObject.fromDate}`;
                 break;
             default:
-                throw new Error("Invalid entity type.");
+                throw new Error('Invalid entity type.');
         }
 
         await $.ajax({

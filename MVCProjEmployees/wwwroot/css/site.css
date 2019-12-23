@@ -561,3 +561,19 @@ header {
         display: none;
         min-height: 800px;
     }
+
+.plugin-added-table-ui {
+    width: 90%;
+    margin: 2%;
+    border: 1px solid #D2D2D2;
+}
+
+    .plugin-added-table-ui tbody tr:hover {
+        background: #F5FBFF;
+        cursor: pointer;
+    }
+
+    .plugin-added-table-ui tbody tr input[type=checkbox] {
+        margin-left: 10%;
+    }
+    

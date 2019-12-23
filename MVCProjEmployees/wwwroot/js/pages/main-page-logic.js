@@ -14,7 +14,7 @@ function searchBarInputHandler() {
             clearTimeout(timeout);
         }
         timeout = setTimeout(async () => {
-            await searchEntity();
+            await searchElement();
         }, 300);
     });
 }
@@ -90,13 +90,13 @@ async function handleNavbarItemClick(id) {
     if (data) {
         switch (loadedEntity) {
             case ENTITY_TYPES.EMPLOYEE:
-                addEmployees(data);
+                addEntityElement(loadedEntity, data);
                 break;
             case ENTITY_TYPES.DEPARTMENT:
-                addDepartments(data);
+                addEntityElement(loadedEntity, data);
                 break;
             case ENTITY_TYPES.SALARY:
-                addSalaries(data);
+                addEntityElement(loadedEntity, data);
                 break;
             default:
                 throw new Error('Invalid entity type.');
@@ -155,38 +155,23 @@ function addTableSortHandlers() {
                 switch (parseInt(loadedEntity)) {
                     case ENTITY_TYPES.EMPLOYEE:
                         data = await apiController.getAllEmployees(queryParameters);
-                        addEmployees(data);
+                        addEntityElement(loadedEntity, data);
                         break;
                     case ENTITY_TYPES.DEPARTMENT:
                         data = await apiController.getAllDepartments(queryParameters);
-                        addDepartments(data);
+                        addEntityElement(loadedEntity, data);
                         break;
                     case ENTITY_TYPES.SALARY:
                         data = await apiController.getAllSalaries(queryParameters);
-                        addSalaries(data);
+                        addEntityElement(loadedEntity, data);
                         break;
                     default:
                         throw new Error('Invalid entity type.');
                         break;
                 }
             } else if (queryState === QUERY_TYPES.SEARCH_QUERY) {
-                switch (parseInt(loadedEntity)) {
-                    case ENTITY_TYPES.EMPLOYEE:
-                        data = await apiController.searchEmployee(queryParameters, searchString);
-                        addEmployees(data);
-                        break;
-                    case ENTITY_TYPES.DEPARTMENT:
-                        data = await apiController.searchDepartment(queryParameters, searchString);
-                        addDepartments(data);
-                        break;
-                    case ENTITY_TYPES.SALARY:
-                        data = await apiController.searchSalary(queryParameters, searchString);
-                        addSalaries(data);
-                        break;
-                    default:
-                        throw new Error('Invalid entity type.');
-                        break;
-                }
+                data = await apiController.searchEntity(loadedEntity, queryParameters, searchString);
+                addEntityElement(loadedEntity, data);
             } else {
                 throw new Error("Invalid query state.");
             }
@@ -220,38 +205,23 @@ function dropdownChangeHandler() {
             switch (parseInt(loadedEntity)) {
                 case ENTITY_TYPES.EMPLOYEE:
                     data = await apiController.getAllEmployees(queryParameters);
-                    addEmployees(data);
+                    addEntityElement(loadedEntity, data);
                     break;
                 case ENTITY_TYPES.DEPARTMENT:
                     data = await apiController.getAllDepartments(queryParameters);
-                    addDepartments(data);
+                    addEntityElement(loadedEntity, data);
                     break;
                 case ENTITY_TYPES.SALARY:
                     data = await apiController.getAllSalaries(queryParameters);
-                    addSalaries(data);
+                    addEntityElement(loadedEntity, data);
                     break;
                 default:
                     throw new Error('Invalid entity type.');
                     break;
             }
         } else if (queryState === QUERY_TYPES.SEARCH_QUERY) {
-            switch (parseInt(loadedEntity)) {
-                case ENTITY_TYPES.EMPLOYEE:
-                    data = await apiController.searchEmployee(queryParameters, searchString);
-                    addEmployees(data);
-                    break;
-                case ENTITY_TYPES.DEPARTMENT:
-                    data = await apiController.searchDepartment(queryParameters, searchString);
-                    addDepartments(data);
-                    break;
-                case ENTITY_TYPES.SALARY:
-                    data = await apiController.searchSalary(queryParameters, searchString);
-                    addSalaries(data);
-                    break;
-                default:
-                    throw new Error('Invalid entity type.');
-                    break;
-            }
+            data = await apiController.searchEntity(loadedEntity, queryParameters, searchString);
+            addEntityElement(loadedEntity, data);
         } else {
             throw new Error("Invalid query state.");
         }
@@ -283,38 +253,23 @@ function pageOffsetClickHandlers() {
                 switch (parseInt(loadedEntity)) {
                     case ENTITY_TYPES.EMPLOYEE:
                         data = await apiController.getAllEmployees(queryParameters);
-                        addEmployees(data);
+                        addEntityElement(loadedEntity, data);
                         break;
                     case ENTITY_TYPES.DEPARTMENT:
                         data = await apiController.getAllDepartments(queryParameters);
-                        addDepartments(data);
+                        addEntityElement(loadedEntity, data);
                         break;
                     case ENTITY_TYPES.SALARY:
                         data = await apiController.getAllSalaries(queryParameters);
-                        addSalaries(data);
+                        addEntityElement(loadedEntity, data);
                         break;
                     default:
                         throw new Error('Invalid entity type.');
                         break;
                 }
             } else if (queryState === QUERY_TYPES.SEARCH_QUERY) {
-                switch (parseInt(loadedEntity)) {
-                    case ENTITY_TYPES.EMPLOYEE:
-                        data = await apiController.searchEmployee(queryParameters, searchString);
-                        addEmployees(data);
-                        break;
-                    case ENTITY_TYPES.DEPARTMENT:
-                        data = await apiController.searchDepartment(queryParameters, searchString);
-                        addDepartments(data);
-                        break;
-                    case ENTITY_TYPES.SALARY:
-                        data = await apiController.searchSalary(queryParameters, searchString);
-                        addSalaries(data);
-                        break;
-                    default:
-                        throw new Error('Invalid entity type.');
-                        break;
-                }
+                data = await apiController.searchEntity(loadedEntity, queryParameters, searchString);
+                addEntityElement(loadedEntity, data);
             } else {
                 throw new Error("Invalid query state.");
             }
@@ -347,38 +302,23 @@ function pageOffsetClickHandlers() {
             switch (parseInt(loadedEntity)) {
                 case ENTITY_TYPES.EMPLOYEE:
                     data = await apiController.getAllEmployees(queryParameters);
-                    addEmployees(data);
+                    addEntityElement(loadedEntity, data);
                     break;
                 case ENTITY_TYPES.DEPARTMENT:
                     data = await apiController.getAllDepartments(queryParameters);
-                    addDepartments(data);
+                    addEntityElement(loadedEntity, data);
                     break;
                 case ENTITY_TYPES.SALARY:
                     data = await apiController.getAllSalaries(queryParameters);
-                    addSalaries(data);
+                    addEntityElement(loadedEntity, data);
                     break;
                 default:
                     throw new Error('Invalid entity type.');
                     break;
             }
         } else if (queryState === QUERY_TYPES.SEARCH_QUERY) {
-            switch (parseInt(loadedEntity)) {
-                case ENTITY_TYPES.EMPLOYEE:
-                    data = await apiController.searchEmployee(queryParameters, searchString);
-                    addEmployees(data);
-                    break;
-                case ENTITY_TYPES.DEPARTMENT:
-                    data = await apiController.searchDepartment(queryParameters, searchString);
-                    addDepartments(data);
-                    break;
-                case ENTITY_TYPES.SALARY:
-                    data = await apiController.searchSalary(queryParameters, searchString);
-                    addSalaries(data);
-                    break;
-                default:
-                    throw new Error('Invalid entity type.');
-                    break;
-            }
+            data = await apiController.searchEntity(loadedEntity, queryParameters, searchString);
+            addEntityElement(loadedEntity, data);
         } else {
             throw new Error("Invalid query state.");
         }
@@ -388,30 +328,17 @@ function pageOffsetClickHandlers() {
     });
 }
 
-function addEmployees(employees) {
-    employees = employees || [];
+function addEntityElement(entityType, data) {
+    data = data || [];
+
     $(".main-body-page-table tbody").empty();
-    for (let i = 0; i < employees.length; i++) {
+
+    for (let i = 0; i < data.length; i++) {
         if (i > constants.MAXIMUM_TABLE_ROWS) break;
 
         $(".main-body-page-table tbody").append(`<tr id=main-table-data${i}></tr>`);
 
-        let gender = employees[i].employeeGender === 'M' ? 'Male' : 'Female';
-
-        $(`#main-table-data${i}`).append(`<td>${employees[i].firstName} ${employees[i].lastName}</td>`);
-        $(`#main-table-data${i}`).append(`<td>${employees[i].employeeNumber}</td>`);
-        $(`#main-table-data${i}`).append(`<td>${gender}</td>`);
-        $(`#main-table-data${i}`).append(`<td>${employees[i].birthDate.substring(0, 10)}</td>`);
-        $(`#main-table-data${i}`).append(`<td>${employees[i].hireDate.substring(0, 10)}</td>`);
-        $(`#main-table-data${i}`).append(`<td><input class="table-delete-checkbox form-check-input" type="checkbox" /></td>`);
-
-        $(`#main-table-data${i}`).click(async () => {
-            let uniqueIdentifiers = {};
-
-            uniqueIdentifiers.employeeNumber = employees[i].employeeNumber;
-
-            await loadEmployeePage(uniqueIdentifiers);
-        });
+        addEntityRow(data[i], entityType, i);
     }
 
     $('.table-delete-checkbox').on('change', function () {
@@ -419,56 +346,67 @@ function addEmployees(employees) {
     });
 }
 
-function addDepartments(departments) {
-    departments = departments || [];
-    $(".main-body-page-table tbody").empty();
-    for (let i = 0; i < departments.length; i++) {
-        if (i > constants.MAXIMUM_TABLE_ROWS) break;
-
-        $(".main-body-page-table tbody").append(`<tr id=main-table-data${i}></tr>`);
-
-        $(`#main-table-data${i}`).append(`<td>${departments[i].departmentNumber}</td>`);
-        $(`#main-table-data${i}`).append(`<td>${departments[i].departmentName}</td>`);
-        $(`#main-table-data${i}`).append(`<td><input class="table-delete-checkbox form-check-input" type="checkbox" /></td>`);
-
-        $(`#main-table-data${i}`).click(async () => {
-            await loadDepartmentPage();
-        });
+function addEntityRow(entity, entityType, index) {
+    switch (parseInt(entityType)) {
+        case ENTITY_TYPES.EMPLOYEE:
+            addEmployeeRow(entity, index);
+            break;
+        case ENTITY_TYPES.DEPARTMENT:
+            addDepartmentRow(entity, index);
+            break;
+        case ENTITY_TYPES.SALARY:
+            addSalaryRow(entity, index);
+            break;
+        default:
+            throw new Error('Invalid entity type.');
+            break;
     }
+}
 
-    $('.table-delete-checkbox').on('change', function () {
-        $('.table-delete-checkbox').not(this).prop('checked', false);
+function addEmployeeRow(employee, index) {
+    let gender = employee.employeeGender === 'M' ? 'Male' : 'Female';
+
+    $(`#main-table-data${index}`).append(`<td>${employee.firstName} ${employee.lastName}</td>`);
+    $(`#main-table-data${index}`).append(`<td>${employee.employeeNumber}</td>`);
+    $(`#main-table-data${index}`).append(`<td>${gender}</td>`);
+    $(`#main-table-data${index}`).append(`<td>${employee.birthDate.substring(0, 10)}</td>`);
+    $(`#main-table-data${index}`).append(`<td>${employee.hireDate.substring(0, 10)}</td>`);
+    $(`#main-table-data${index}`).append(`<td><input class="table-delete-checkbox form-check-input" type="checkbox" /></td>`);
+
+    $(`#main-table-data${index}`).click(async () => {
+        let uniqueIdentifiers = {};
+
+        uniqueIdentifiers.employeeNumber = employees[i].employeeNumber;
+
+        await loadEmployeePage(uniqueIdentifiers);
     });
 }
 
-function addSalaries(salaries) {
-    salaries = salaries || [];
+function addDepartmentRow(department, index) {
+    $(`#main-table-data${index}`).append(`<td>${department.departmentNumber}</td>`);
+    $(`#main-table-data${index}`).append(`<td>${department.departmentName}</td>`);
+    $(`#main-table-data${index}`).append(`<td><input class="table-delete-checkbox form-check-input" type="checkbox" /></td>`);
 
-    $(".main-body-page-table tbody").empty();
-    for (let i = 0; i < salaries.length; i++) {
-        if (i > constants.MAXIMUM_TABLE_ROWS) break;
+    $(`#main-table-data${index}`).click(async () => {
+        await loadDepartmentPage();
+    });
+}
 
-        let untilDate = new Date(salaries[i].toDate) >= constants.DATABASE_DEFAULT_DATE ? '-' : salaries[i].toDate.substring(0, 10);
-        let employeeName =
-            salaries[i].employee
-                ? salaries[i].employee.firstName + ' ' + salaries[i].employee.lastName :
-                '';
+function addSalaryRow(salary, index) {
+    let untilDate = new Date(salary.toDate) >= constants.DATABASE_DEFAULT_DATE ? '-' : salary.toDate.substring(0, 10);
+    let employeeName =
+        salary.employee
+            ? salary.employee.firstName + ' ' + salary.employee.lastName :
+            '';
 
-        $(".main-body-page-table tbody").append(`<tr id=main-table-data${i}></tr>`);
+    $(`#main-table-data${index}`).append(`<td>${employeeName}</td>`);
+    $(`#main-table-data${index}`).append(`<td>$${salary.employeeSalary}</td>`);
+    $(`#main-table-data${index}`).append(`<td>${salary.fromDate.substring(0, 10)}</td>`);
+    $(`#main-table-data${index}`).append(`<td>${untilDate}</td>`);
+    $(`#main-table-data${index}`).append(`<td><input class="table-delete-checkbox form-check-input" type="checkbox" /></td>`);
 
-        $(`#main-table-data${i}`).append(`<td>${employeeName}</td>`);
-        $(`#main-table-data${i}`).append(`<td>$${salaries[i].employeeSalary}</td>`);
-        $(`#main-table-data${i}`).append(`<td>${salaries[i].fromDate.substring(0, 10)}</td>`);
-        $(`#main-table-data${i}`).append(`<td>${untilDate}</td>`);
-        $(`#main-table-data${i}`).append(`<td><input class="table-delete-checkbox form-check-input" type="checkbox" /></td>`);
-
-        $(`#main-table-data${i}`).click(async () => {
-            await loadEmployeePage();
-        });
-    }
-
-    $('.table-delete-checkbox').on('change', function () {
-        $('.table-delete-checkbox').not(this).prop('checked', false);
+    $(`#main-table-data${index}`).click(async () => {
+        await loadEmployeePage();
     });
 }
 
@@ -546,7 +484,7 @@ function addEntityClickHandler() {
     });
 }
 
-async function searchEntity() {
+async function searchElement() {
     let queryParameters = {};
 
     let loadedEntity = window.sessionStorage.getItem(constants.STORAGE_SELECTED_ENTITY_KEY);
@@ -559,31 +497,31 @@ async function searchEntity() {
     switch (parseInt(loadedEntity)) {
         case ENTITY_TYPES.EMPLOYEE:
             if (searchString != '') {
-                data = await apiController.searchEmployee(queryParameters, searchString);
-                addEmployees(data);
+                data = await apiController.searchEntity(loadedEntity, queryParameters, searchString);
+                addEntityElement(loadedEntity, data);
             } else {
                 data = await apiController.getAllEmployees(queryParameters);
-                addEmployees(data);
+                addEntityElement(loadedEntity, data);
             }
 
             break;
         case ENTITY_TYPES.DEPARTMENT:
             if (searchString != '') {
-                data = await apiController.searchDepartment(queryParameters, searchString);
-                addDepartments(data);
+                data = await apiController.searchEntity(loadedEntity, queryParameters, searchString);
+                addEntityElement(loadedEntity, data);
             } else {
                 data = await apiController.getAllDepartments(queryParameters);
-                addDepartments(data);
+                addEntityElement(loadedEntity, data);
             }
 
             break;
         case ENTITY_TYPES.SALARY:
             if (searchString != '') {
-                data = await apiController.searchSalary(queryParameters, searchString);
-                addSalaries(data);
+                data = await apiController.searchEntity(loadedEntity, queryParameters, searchString);
+                addEntityElement(loadedEntity, data);
             } else {
                 data = await apiController.getAllSalaries(queryParameters);
-                addSalaries(data);
+                addEntityElement(loadedEntity, data);
             }
 
             break;

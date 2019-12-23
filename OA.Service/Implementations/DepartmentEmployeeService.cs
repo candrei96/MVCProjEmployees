@@ -67,7 +67,12 @@ namespace OA.Service.Implementations
 
         public IEnumerable<DepartmentEmployee> GetDepartmentEmployees()
         {
-            return _departmentEmployeeRepository.GetAll();
+            return _departmentEmployeeRepository
+                .GetAll()
+                .AsQueryable()
+                .Include(e => e.Employee)
+                .Include(e => e.Department)
+                .AsEnumerable();
         }
 
         public DepartmentEmployee GetOneDepartmentEmployee(int employeeNumber, string departmentNumber)

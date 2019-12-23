@@ -22,6 +22,33 @@ let tablePlugin = (function () {
         return extendedObject;
     }
 
+    function addLeftOffsetHandler(context) {
+        $(".table-plugin-offset-left").click(async () => {
+            const pageCount = window.sessionStorage.getItem(constants.STORAGE_PAGE_COUNTER);
+            const currentFilter = window.sessionStorage.getItem(constants.CURRENT_APPLIED_FILTER);
+            const currentSortOrder = window.sessionStorage.getItem(constants.CURRENT_APPLIED_SORT_ORDER);
+
+            let queryParameters = {};
+
+            queryParameters.pageSize = $(".returned-records-dropdown").val();
+            queryParameters.page = parseInt(pageCount) - 1;
+            queryParameters.filter = currentFilter;
+            queryParameters.sort = currentSortOrder;
+
+            if (queryParameters.page >= 0) {
+                $(".plugin-added-table-ui tbody").empty();
+
+                createTableBody(context);
+
+                $(".table-plugin-counter-text").text(queryParameters.page + 1);
+            }
+        });
+    }
+
+    function addTableListeners(context) {
+        addLeftOffsetHandler(context);
+    }
+
     function createTableHead(context) {
         let tableHeading;
 
@@ -85,10 +112,10 @@ let tablePlugin = (function () {
                             <td>${departmentNumber}</td>
                             <td>${deptEmp.fromDate.substring(0, 10)}</td>
                             <td>${deptEmp.toDate.substring(0, 10)}</td>
-                            <td>Delete</td>
+                            <td><input type="checkbox" /></td>
                         </tr>
                         `;
-                        console.log(tableRow)
+
                         tableBody += tableRow;
                     });
                 }
@@ -103,7 +130,7 @@ let tablePlugin = (function () {
                             <td>${empTitle.title}</td>
                             <td>${empTitle.fromDate.substring(0, 10)}</td>
                             <td>${empTitle.toDate.substring(0, 10)}</td>
-                            <td>Delete</td>
+                            <td><input type="checkbox" /></td>
                         </tr>
                         `;
                         tableBody += tableRow;
@@ -120,7 +147,7 @@ let tablePlugin = (function () {
                             <td>${empSalary.salary}</td>
                             <td>${empSalary.fromDate.substring(0, 10)}</td>
                             <td>${empSalary.toDate.substring(0, 10)}</td>
-                            <td>Delete</td>
+                            <td><input type="checkbox" /></td>
                         </tr>
                         `;
                         tableBody += tableRow;
@@ -132,7 +159,7 @@ let tablePlugin = (function () {
 
                 if (departmentManagers && departmentManagers.length > 0) {
                     departmentManagers.forEach((deptManager) => {
-                        let employeeName = deptManager.employee ? deptManager.employee.firstName + ' ' +deptManager.employee.lastName : '';
+                        let employeeName = deptManager.employee ? deptManager.employee.firstName + ' ' + deptManager.employee.lastName : '';
                         let employeeNumber = deptManager.employee ? deptManager.employee.employeeNumber : '';
 
                         let tableRow = `
@@ -141,7 +168,7 @@ let tablePlugin = (function () {
                             <td>${employeeNumber}</td>
                             <td>${departmentManagers.fromDate.substring(0, 10)}</td>
                             <td>${departmentManagers.toDate.substring(0, 10)}</td>
-                            <td>Delete</td>
+                            <td><input type="checkbox" /></td>
                         </tr>
                         `;
                         tableBody += tableRow;
@@ -160,7 +187,7 @@ let tablePlugin = (function () {
         let tableBody = await createTableBody(context);
 
         const tableHtml = `
-        <table class="table">
+        <table class="table plugin-added-table-ui">
             <thead>${tableHeading}</thead>
             <tbody>${tableBody}</tbody>
         </table>
@@ -170,6 +197,8 @@ let tablePlugin = (function () {
 
         $(`${context.options.ATTACH_SELECTOR}`)
             .append(tableHtml);
+
+        addTableListeners(context);
     }
 
     function TablePlugin(options) {
@@ -179,7 +208,7 @@ let tablePlugin = (function () {
             LOADED_ENTITY_IDENTIFIERS: {}
         };
 
-        this.options = extendOptions(options, this.defaultOptions);  
+        this.options = extendOptions(options, this.defaultOptions);
     }
 
     async function initPlugin(options) {

@@ -362,7 +362,7 @@ namespace MVCProjEmployees.Controllers
             }
         }
 
-        [HttpGet("employees/employeedepartments/{employeeNumber}")]
+        [HttpGet("employees/employee-departments/{employeeNumber}")]
         public IActionResult GetAllDepartmentEmployeesByEmployeeNumber(
                 [FromQuery(Name = "page")] int page,
                 [FromQuery(Name = "pageSize")] int pageSize,
@@ -404,7 +404,8 @@ namespace MVCProjEmployees.Controllers
                             EmployeeNumber = d.EmployeeNumber,
                             DepartmentNumber = d.DepartmentNumber,
                             FromDate = d.FromDate,
-                            ToDate = d.ToDate
+                            ToDate = d.ToDate,
+                            Department = d.Department
                         };
                         departmentList.Add(department);
                     });

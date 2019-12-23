@@ -1,4 +1,5 @@
 ﻿using MVCProjEmployees.Utils;
+using OA.Data.Entities;
 using OA.Web.Exceptions;
 using System;
 
@@ -21,6 +22,18 @@ namespace MVCProjEmployees.Models
         public DateTime ToDate
         {
             get; set;
+        }
+
+        public Employee Employee
+        {
+            get;
+            set;
+        }
+
+        public Department Department
+        {
+            get;
+            set;
         }
 
         public override string ToString()

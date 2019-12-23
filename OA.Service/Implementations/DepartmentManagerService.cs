@@ -63,7 +63,12 @@ namespace OA.Service.Implementations
 
         public IEnumerable<DepartmentManager> GetDepartmentManagers()
         {
-            return _deptManagerRepository.GetAll();
+            return _deptManagerRepository
+                .GetAll()
+                .AsQueryable()
+                .Include(e => e.Employee)
+                .Include(e => e.Department)
+                .AsEnumerable();
         }
 
         public DepartmentManager GetOneDepartmentManager(int employeeNumber, string departmentNumber)
