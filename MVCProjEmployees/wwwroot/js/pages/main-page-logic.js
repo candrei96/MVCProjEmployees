@@ -59,21 +59,21 @@ async function handleNavbarItemClick(id) {
     switch (id) {
         case constants.EMPLOYEE_TAB_ID:
             if (loadedEntity === ENTITY_TYPES.EMPLOYEE) break;
-            data = await apiController.getAllEmployees();
+            data = await apiController.getEntity(ENTITY_TYPES.EMPLOYEE);
             await apiController.loadHtmlPage(constants.EMPLOYEE_TAB_RESOURCE);
 
             loadedEntity = ENTITY_TYPES.EMPLOYEE;
             break;
         case constants.DEPARTMENT_TAB_ID:
             if (loadedEntity === ENTITY_TYPES.DEPARTMENT) break;
-            data = await apiController.getAllDepartments();
+            data = await apiController.getEntity(ENTITY_TYPES.DEPARTMENT);
             await apiController.loadHtmlPage(constants.DEPARTMENT_TAB_RESOURCE);
 
             loadedEntity = ENTITY_TYPES.DEPARTMENT;
             break;
         case constants.SALARY_TAB_ID:
-            if (loadedEntity === ENTITY_TYPES) break;
-            data = await apiController.getAllSalaries();
+            if (loadedEntity === ENTITY_TYPES.SALARY) break;
+            data = await apiController.getEntity(ENTITY_TYPES.SALARY);
             await apiController.loadHtmlPage(constants.SALARY_TAB_RESOURCE);
 
             loadedEntity = ENTITY_TYPES.SALARY;
@@ -88,20 +88,7 @@ async function handleNavbarItemClick(id) {
     window.sessionStorage.setItem(constants.STORAGE_PAGE_COUNTER, 0);
 
     if (data) {
-        switch (loadedEntity) {
-            case ENTITY_TYPES.EMPLOYEE:
-                addEntityElement(loadedEntity, data);
-                break;
-            case ENTITY_TYPES.DEPARTMENT:
-                addEntityElement(loadedEntity, data);
-                break;
-            case ENTITY_TYPES.SALARY:
-                addEntityElement(loadedEntity, data);
-                break;
-            default:
-                throw new Error('Invalid entity type.');
-                break;
-        }
+        addEntityElement(loadedEntity, data);
     }
 
     addTableSortHandlers();
@@ -152,23 +139,8 @@ function addTableSortHandlers() {
             $(".main-body-page-table tbody").empty();
 
             if (queryState === QUERY_TYPES.NORMAL_QUERY) {
-                switch (parseInt(loadedEntity)) {
-                    case ENTITY_TYPES.EMPLOYEE:
-                        data = await apiController.getAllEmployees(queryParameters);
-                        addEntityElement(loadedEntity, data);
-                        break;
-                    case ENTITY_TYPES.DEPARTMENT:
-                        data = await apiController.getAllDepartments(queryParameters);
-                        addEntityElement(loadedEntity, data);
-                        break;
-                    case ENTITY_TYPES.SALARY:
-                        data = await apiController.getAllSalaries(queryParameters);
-                        addEntityElement(loadedEntity, data);
-                        break;
-                    default:
-                        throw new Error('Invalid entity type.');
-                        break;
-                }
+                data = await apiController.getEntity(loadedEntity, queryParameters);;
+                addEntityElement(loadedEntity, data);
             } else if (queryState === QUERY_TYPES.SEARCH_QUERY) {
                 data = await apiController.searchEntity(loadedEntity, queryParameters, searchString);
                 addEntityElement(loadedEntity, data);
@@ -202,23 +174,8 @@ function dropdownChangeHandler() {
         $(".main-body-page-table tbody").empty();
 
         if (queryState === QUERY_TYPES.NORMAL_QUERY) {
-            switch (parseInt(loadedEntity)) {
-                case ENTITY_TYPES.EMPLOYEE:
-                    data = await apiController.getAllEmployees(queryParameters);
-                    addEntityElement(loadedEntity, data);
-                    break;
-                case ENTITY_TYPES.DEPARTMENT:
-                    data = await apiController.getAllDepartments(queryParameters);
-                    addEntityElement(loadedEntity, data);
-                    break;
-                case ENTITY_TYPES.SALARY:
-                    data = await apiController.getAllSalaries(queryParameters);
-                    addEntityElement(loadedEntity, data);
-                    break;
-                default:
-                    throw new Error('Invalid entity type.');
-                    break;
-            }
+            data = await apiController.getEntity(loadedEntity, queryParameters);;
+            addEntityElement(loadedEntity, data);
         } else if (queryState === QUERY_TYPES.SEARCH_QUERY) {
             data = await apiController.searchEntity(loadedEntity, queryParameters, searchString);
             addEntityElement(loadedEntity, data);
@@ -250,23 +207,8 @@ function pageOffsetClickHandlers() {
             $(".main-body-page-table tbody").empty();
 
             if (queryState === QUERY_TYPES.NORMAL_QUERY) {
-                switch (parseInt(loadedEntity)) {
-                    case ENTITY_TYPES.EMPLOYEE:
-                        data = await apiController.getAllEmployees(queryParameters);
-                        addEntityElement(loadedEntity, data);
-                        break;
-                    case ENTITY_TYPES.DEPARTMENT:
-                        data = await apiController.getAllDepartments(queryParameters);
-                        addEntityElement(loadedEntity, data);
-                        break;
-                    case ENTITY_TYPES.SALARY:
-                        data = await apiController.getAllSalaries(queryParameters);
-                        addEntityElement(loadedEntity, data);
-                        break;
-                    default:
-                        throw new Error('Invalid entity type.');
-                        break;
-                }
+                data = await apiController.getEntity(loadedEntity, queryParameters);;
+                addEntityElement(loadedEntity, data);
             } else if (queryState === QUERY_TYPES.SEARCH_QUERY) {
                 data = await apiController.searchEntity(loadedEntity, queryParameters, searchString);
                 addEntityElement(loadedEntity, data);
@@ -299,23 +241,8 @@ function pageOffsetClickHandlers() {
 
         $(".main-body-page-table tbody").empty();
         if (queryState === QUERY_TYPES.NORMAL_QUERY) {
-            switch (parseInt(loadedEntity)) {
-                case ENTITY_TYPES.EMPLOYEE:
-                    data = await apiController.getAllEmployees(queryParameters);
-                    addEntityElement(loadedEntity, data);
-                    break;
-                case ENTITY_TYPES.DEPARTMENT:
-                    data = await apiController.getAllDepartments(queryParameters);
-                    addEntityElement(loadedEntity, data);
-                    break;
-                case ENTITY_TYPES.SALARY:
-                    data = await apiController.getAllSalaries(queryParameters);
-                    addEntityElement(loadedEntity, data);
-                    break;
-                default:
-                    throw new Error('Invalid entity type.');
-                    break;
-            }
+            data = await apiController.getEntity(loadedEntity, queryParameters);;
+            addEntityElement(loadedEntity, data);
         } else if (queryState === QUERY_TYPES.SEARCH_QUERY) {
             data = await apiController.searchEntity(loadedEntity, queryParameters, searchString);
             addEntityElement(loadedEntity, data);
@@ -373,10 +300,12 @@ function addEmployeeRow(employee, index) {
     $(`#main-table-data${index}`).append(`<td>${employee.hireDate.substring(0, 10)}</td>`);
     $(`#main-table-data${index}`).append(`<td><input class="table-delete-checkbox form-check-input" type="checkbox" /></td>`);
 
+    let employeeNumber = employee.employeeNumber;
+
     $(`#main-table-data${index}`).click(async () => {
         let uniqueIdentifiers = {};
 
-        uniqueIdentifiers.employeeNumber = employees[i].employeeNumber;
+        uniqueIdentifiers.employeeNumber = employeeNumber;
 
         await loadEmployeePage(uniqueIdentifiers);
     });
@@ -387,8 +316,14 @@ function addDepartmentRow(department, index) {
     $(`#main-table-data${index}`).append(`<td>${department.departmentName}</td>`);
     $(`#main-table-data${index}`).append(`<td><input class="table-delete-checkbox form-check-input" type="checkbox" /></td>`);
 
+    let departmentNumber = department.departmentNumber;
+
     $(`#main-table-data${index}`).click(async () => {
-        await loadDepartmentPage();
+        let uniqueIdentifiers = {};
+
+        uniqueIdentifiers.departmentNumber = departmentNumber;
+
+        await loadDepartmentPage(uniqueIdentifiers);
     });
 }
 
@@ -405,8 +340,14 @@ function addSalaryRow(salary, index) {
     $(`#main-table-data${index}`).append(`<td>${untilDate}</td>`);
     $(`#main-table-data${index}`).append(`<td><input class="table-delete-checkbox form-check-input" type="checkbox" /></td>`);
 
+    let employeeNumber = salary.employeeNumber;
+
     $(`#main-table-data${index}`).click(async () => {
-        await loadEmployeePage();
+        let uniqueIdentifiers = {};
+
+        uniqueIdentifiers.employeeNumber = employeeNumber;
+
+        await loadEmployeePage(uniqueIdentifiers);
     });
 }
 
@@ -500,7 +441,7 @@ async function searchElement() {
                 data = await apiController.searchEntity(loadedEntity, queryParameters, searchString);
                 addEntityElement(loadedEntity, data);
             } else {
-                data = await apiController.getAllEmployees(queryParameters);
+                data = await apiController.getEntity(loadedEntity, queryParameters);;
                 addEntityElement(loadedEntity, data);
             }
 
@@ -510,7 +451,7 @@ async function searchElement() {
                 data = await apiController.searchEntity(loadedEntity, queryParameters, searchString);
                 addEntityElement(loadedEntity, data);
             } else {
-                data = await apiController.getAllDepartments(queryParameters);
+                data = await apiController.getEntity(loadedEntity, queryParameters);;
                 addEntityElement(loadedEntity, data);
             }
 
@@ -520,7 +461,7 @@ async function searchElement() {
                 data = await apiController.searchEntity(loadedEntity, queryParameters, searchString);
                 addEntityElement(loadedEntity, data);
             } else {
-                data = await apiController.getAllSalaries(queryParameters);
+                data = await apiController.getEntity(loadedEntity, queryParameters);;
                 addEntityElement(loadedEntity, data);
             }
 

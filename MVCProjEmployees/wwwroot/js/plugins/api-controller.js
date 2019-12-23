@@ -19,98 +19,10 @@ let controller = (function () {
         });
     }
 
-    ApiController.prototype.getDepartmentEmployeesByEmployeeNumber = async function (pathParameters) {
-        let computedUrl = `${this.options.API_URL}/api/departments/employees/employee-departments`;
+    ApiController.prototype.getEntityByIdentifier = async function (entityType, queryParameters, uniqueIdentifiers) {
+        let requestUrl;
 
-        pathParameters = pathParameters || {};
-
-        if (!pathParameters.employeeNumber) return;
-
-        computedUrl += `/${pathParameters.employeeNumber}`;
-
-        const resultedData = await $.ajax({
-            url: computedUrl,
-            contentType: 'application/json; charset=UTF-8',
-            method: 'GET'
-        });
-
-        return resultedData;
-    }
-
-    ApiController.prototype.getDepartmentManagersByEmployeeNumber = async function (pathParameters) {
-        let computedUrl = `${this.options.API_URL}/api/departments/managers/manager-departments`;
-
-        pathParameters = pathParameters || {};
-
-        if (!pathParameters.employeeNumber) return;
-
-        computedUrl += `/${pathParameters.employeeNumber}`;
-
-        const resultedData = await $.ajax({
-            url: computedUrl,
-            contentType: 'application/json; charset=UTF-8',
-            method: 'GET'
-        });
-
-        return resultedData;
-    }
-
-    ApiController.prototype.getTitlesByEmployeeNumber = async function (pathParameters) {
-        let computedUrl = `${this.options.API_URL}/api/employees`;
-
-        pathParameters = pathParameters || {};
-
-        if (!pathParameters.employeeNumber) return;
-
-        computedUrl += `/${pathParameters.employeeNumber}/titles`;
-
-        const resultedData = await $.ajax({
-            url: computedUrl,
-            contentType: 'application/json; charset=UTF-8',
-            method: 'GET'
-        });
-
-        return resultedData;
-    }
-
-    ApiController.prototype.getSalariesByEmployeeNumber = async function (pathParameters) {
-        let computedUrl = `${this.options.API_URL}/api/employees`;
-
-        pathParameters = pathParameters || {};
-
-        if (!pathParameters.employeeNumber) return;
-
-        computedUrl += `/${pathParameters.employeeNumber}/salaries`;
-
-        const resultedData = await $.ajax({
-            url: computedUrl,
-            contentType: 'application/json; charset=UTF-8',
-            method: 'GET'
-        });
-
-        return resultedData;
-    }
-
-    ApiController.prototype.getOneEmployee = async function (pathParameters) {
-        let computedUrl = `${this.options.API_URL}/api/employees`;
-
-        pathParameters = pathParameters || {};
-
-        if (!pathParameters.employeeNumber) return;
-
-        computedUrl += `/${pathParameters.employeeNumber}`;
-
-        const resultedData = await $.ajax({
-            url: computedUrl,
-            contentType: 'application/json; charset=UTF-8',
-            method: 'GET'
-        });
-
-        return resultedData;
-    }
-
-    ApiController.prototype.getAllEmployees = async function (queryParameters) {
-        let computedUrl = `${this.options.API_URL}/api/employees`;
+        uniqueIdentifiers = uniqueIdentifiers || {};
 
         queryParameters = queryParameters || {};
 
@@ -119,22 +31,56 @@ let controller = (function () {
         queryParameters.filter = queryParameters.filter || constants.QUERY_PARAMETER_DEFAULT_FILTER;
         queryParameters.sort = queryParameters.sort || constants.QUERY_PARAMETER_DEFAULT_SORT;
 
-        computedUrl += `?page=${queryParameters.page}&pageSize=${queryParameters.pageSize}&filter=${queryParameters.filter}&sort=${queryParameters.sort}`;
+        switch (parseInt(entityType)) {
+            case ENTITY_TYPES.EMPLOYEE:
+                if (uniqueIdentifiers.employeeNumber && uniqueIdentifiers.employeeNumber > 0) {
+                    requestUrl = `${this.options.API_URL}/api/employees/${uniqueIdentifiers.employeeNumber}`;
+                }
+
+                break;
+            case ENTITY_TYPES.DEPARTMENT_EMPLOYEE:
+                if (uniqueIdentifiers.employeeNumber && uniqueIdentifiers.employeeNumber > 0) {
+                    requestUrl = `${this.options.API_URL}/api/departments/employees/employee-departments/${uniqueIdentifiers.employeeNumber}`;
+                }
+
+                break;
+            case ENTITY_TYPES.DEPARTMENT_MANAGER:
+                if (uniqueIdentifiers.employeeNumber && uniqueIdentifiers.employeeNumber > 0) {
+                    requestUrl = `${this.options.API_URL}/api/departments/managers/manager-departments/${uniqueIdentifiers.employeeNumber}`;
+                }
+
+                break;
+            case ENTITY_TYPES.TITLE:
+                if (uniqueIdentifiers.employeeNumber && uniqueIdentifiers.employeeNumber > 0) {
+                    requestUrl = `${this.options.API_URL}/api/employees/${uniqueIdentifiers.employeeNumber}/titles`;
+                }
+
+                break;
+            case ENTITY_TYPES.SALARY:
+                if (uniqueIdentifiers.employeeNumber && uniqueIdentifiers.employeeNumber > 0) {
+                    requestUrl = `${this.options.API_URL}/api/employees/${uniqueIdentifiers.employeeNumber}/salaries`;
+                }
+
+                break;
+            default:
+                throw new Error('Invalid entity type.');
+                break;
+        }
+
+        if (!requestUrl) return;
 
         const resultedData = await $.ajax({
-            url: computedUrl,
+            url: requestUrl,
             contentType: 'application/json; charset=UTF-8',
             method: 'GET'
         });
 
-        window.sessionStorage.setItem(constants.LAST_QUERY_STATE, QUERY_TYPES.NORMAL_QUERY);
-
         return resultedData;
     }
 
-    ApiController.prototype.getAllDepartments = async function (queryParameters) {
-        let computedUrl = `${this.options.API_URL}/api/departments`;
-
+    ApiController.prototype.getEntity = async function (entityType, queryParameters) {
+        let requestUrl;
+        
         queryParameters = queryParameters || {};
 
         queryParameters.page = queryParameters.page || constants.QUERY_PARAMETER_DEFAULT_PAGE;
@@ -142,33 +88,24 @@ let controller = (function () {
         queryParameters.filter = queryParameters.filter || constants.QUERY_PARAMETER_DEFAULT_FILTER;
         queryParameters.sort = queryParameters.sort || constants.QUERY_PARAMETER_DEFAULT_SORT;
 
-        computedUrl += `?page=${queryParameters.page}&pageSize=${queryParameters.pageSize}&filter=${queryParameters.filter}&sort=${queryParameters.sort}`;
+        switch (parseInt(entityType)) {
+            case ENTITY_TYPES.EMPLOYEE:
+                requestUrl = `${this.options.API_URL}/api/employees`;
+                break;
+            case ENTITY_TYPES.DEPARTMENT:
+                requestUrl = `${this.options.API_URL}/api/departments`;
+                break;
+            case ENTITY_TYPES.SALARY:
+                requestUrl = `${this.options.API_URL}/api/employees/salaries`;
+                break;
+            default:
+                throw new Error('Invalid entity type.');
+        }
+
+        requestUrl += `?page=${queryParameters.page}&pageSize=${queryParameters.pageSize}&filter=${queryParameters.filter}&sort=${queryParameters.sort}`;
 
         const resultedData = await $.ajax({
-            url: computedUrl,
-            contentType: 'application/json; charset=UTF-8',
-            method: 'GET'
-        });
-
-        window.sessionStorage.setItem(constants.LAST_QUERY_STATE, QUERY_TYPES.NORMAL_QUERY);
-
-        return resultedData;
-    }
-
-    ApiController.prototype.getAllSalaries = async function (queryParameters) {
-        let computedUrl = `${this.options.API_URL}/api/employees/salaries`;
-
-        queryParameters = queryParameters || {};
-
-        queryParameters.page = queryParameters.page || constants.QUERY_PARAMETER_DEFAULT_PAGE;
-        queryParameters.pageSize = queryParameters.pageSize || constants.QUERY_PARAMETER_DEFAULT_PAGE_SIZE;
-        queryParameters.filter = queryParameters.filter || constants.QUERY_PARAMETER_DEFAULT_FILTER;
-        queryParameters.sort = queryParameters.sort || constants.QUERY_PARAMETER_DEFAULT_SORT;
-
-        computedUrl += `?page=${queryParameters.page}&pageSize=${queryParameters.pageSize}&filter=${queryParameters.filter}&sort=${queryParameters.sort}`;
-
-        const resultedData = await $.ajax({
-            url: computedUrl,
+            url: requestUrl,
             contentType: 'application/json; charset=UTF-8',
             method: 'GET'
         });
@@ -180,6 +117,7 @@ let controller = (function () {
 
     ApiController.prototype.searchEntity = async function (entityType, queryParameters, searchString) {
         let requestUrl;
+
         queryParameters = queryParameters || {};
 
         queryParameters.page = queryParameters.page || constants.QUERY_PARAMETER_DEFAULT_PAGE;
@@ -216,6 +154,7 @@ let controller = (function () {
 
     ApiController.prototype.createEntity = async function (entityType, body) {
         let requestUrl;
+
         switch (parseInt(entityType)) {
             case ENTITY_TYPES.EMPLOYEE:
                 requestUrl = `${this.options.API_URL}/api/employees`;

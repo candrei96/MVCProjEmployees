@@ -56,7 +56,7 @@ function navigationMenuItemClickHandler() {
 }
 
 async function loadEmployeeDetails(uniqueIdentifiers) {
-    const employee = await apiController.getOneEmployee(uniqueIdentifiers);
+    const employee = await apiController.getEntityByIdentifier(ENTITY_TYPES.EMPLOYEE, null, uniqueIdentifiers);
 
     if (!employee) return;
 

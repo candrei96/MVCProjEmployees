@@ -568,6 +568,18 @@ header {
     border: 1px solid #D2D2D2;
 }
 
+    .plugin-added-table-ui thead {
+        background-color: #F4F5F7;
+    }
+
+    .plugin-added-table-ui thead tr th {
+        border: 1px solid #E9E9EB;
+    }
+
+    .plugin-added-table-ui tbody tr {
+        border: 1px solid #E9E9EB;
+    }
+
     .plugin-added-table-ui tbody tr:hover {
         background: #F5FBFF;
         cursor: pointer;

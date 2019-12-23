@@ -94,15 +94,13 @@ let tablePlugin = (function () {
         return tableHeading;
     }
 
-    async function createTableBody(context) {
-        let tableBody = '';
+    function addEntityRows(entityType, entity) {
+        let rows = '';
 
-        switch (parseInt(context.options.LOADED_ENTITY)) {
+        switch (parseInt(entityType)) {
             case ENTITY_TYPES.DEPARTMENT_EMPLOYEE:
-                let departmentEmployees = await apiController.getDepartmentEmployeesByEmployeeNumber(context.options.LOADED_ENTITY_IDENTIFIERS);
-
-                if (departmentEmployees && departmentEmployees.length > 0) {
-                    departmentEmployees.forEach((deptEmp) => {
+                if (entity && entity.length > 0) {
+                    entity.forEach((deptEmp) => {
                         let departmentName = deptEmp.department ? deptEmp.department.departmentName : '';
                         let departmentNumber = deptEmp.department ? deptEmp.department.departmentNumber : '';
 
@@ -116,15 +114,13 @@ let tablePlugin = (function () {
                         </tr>
                         `;
 
-                        tableBody += tableRow;
+                        rows += tableRow;
                     });
                 }
                 break;
             case ENTITY_TYPES.TITLE:
-                let employeeTitles = await apiController.getTitlesByEmployeeNumber(context.options.LOADED_ENTITY_IDENTIFIERS);
-
-                if (employeeTitles && employeeTitles.length > 0) {
-                    employeeTitles.forEach((empTitle) => {
+                if (entity && entity.length > 0) {
+                    entity.forEach((empTitle) => {
                         let tableRow = `
                         <tr>
                             <td>${empTitle.title}</td>
@@ -133,32 +129,13 @@ let tablePlugin = (function () {
                             <td><input type="checkbox" /></td>
                         </tr>
                         `;
-                        tableBody += tableRow;
-                    });
-                }
-                break;
-            case ENTITY_TYPES.SALARY:
-                let employeeSalaries = await apiController.getSalariesByEmployeeNumber(context.options.LOADED_ENTITY_IDENTIFIERS);
-
-                if (employeeSalaries && employeeSalaries.length > 0) {
-                    employeeSalaries.forEach((empSalary) => {
-                        let tableRow = `
-                        <tr>
-                            <td>${empSalary.salary}</td>
-                            <td>${empSalary.fromDate.substring(0, 10)}</td>
-                            <td>${empSalary.toDate.substring(0, 10)}</td>
-                            <td><input type="checkbox" /></td>
-                        </tr>
-                        `;
-                        tableBody += tableRow;
+                        rows += tableRow;
                     });
                 }
                 break;
             case ENTITY_TYPES.DEPARTMENT_MANAGER:
-                let departmentManagers = await apiController.getDepartmentManagersByEmployeeNumber(context.options.LOADED_ENTITY_IDENTIFIERS);
-
-                if (departmentManagers && departmentManagers.length > 0) {
-                    departmentManagers.forEach((deptManager) => {
+                if (entity && entity.length > 0) {
+                    entity.forEach((deptManager) => {
                         let employeeName = deptManager.employee ? deptManager.employee.firstName + ' ' + deptManager.employee.lastName : '';
                         let employeeNumber = deptManager.employee ? deptManager.employee.employeeNumber : '';
 
@@ -171,20 +148,43 @@ let tablePlugin = (function () {
                             <td><input type="checkbox" /></td>
                         </tr>
                         `;
-                        tableBody += tableRow;
+                        rows += tableRow;
+                    });
+                }
+                break;
+            case ENTITY_TYPES.SALARY:
+                if (entity && entity.length > 0) {
+                    entity.forEach((empSalary) => {
+                        let tableRow = `
+                        <tr>
+                            <td>${empSalary.salary}</td>
+                            <td>${empSalary.fromDate.substring(0, 10)}</td>
+                            <td>${empSalary.toDate.substring(0, 10)}</td>
+                            <td><input type="checkbox" /></td>
+                        </tr>
+                        `;
+                        rows += tableRow;
                     });
                 }
                 break;
             default:
                 throw new Error('Invalid entity type.');
+                break;
         }
 
-        return tableBody;
+        return rows;
+    }
+
+    async function createTableBody(context) {
+        let data = await apiController.getEntityByIdentifier(context.options.LOADED_ENTITY, null, context.options.LOADED_ENTITY_IDENTIFIERS);
+        return addEntityRows(context.options.LOADED_ENTITY, data);
     }
 
     async function createHtmlElement(context) {
         let tableHeading = createTableHead(context);
         let tableBody = await createTableBody(context);
+
+        if (!tableBody || tableBody === '') tableBody = `<tr><td colspan="100%"><p>No entries found.</p></td></tr>`;
 
         const tableHtml = `
         <table class="table plugin-added-table-ui">
