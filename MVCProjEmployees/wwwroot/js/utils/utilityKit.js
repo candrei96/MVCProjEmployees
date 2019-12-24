@@ -8,3 +8,21 @@
 
     return Math.abs(Math.floor(diff / 365.25));
 }
+
+export function extendOptions(options, defaultOptions) {
+    let extendedObject = {};
+
+    const defaultOptionsKeys = Object.keys(defaultOptions);
+    defaultOptionsKeys.forEach((defaultOption) => {
+        extendedObject[defaultOption] = defaultOptions[defaultOption];
+    });
+
+    const optionsKeys = Object.keys(options);
+    optionsKeys.forEach((option) => {
+        if (Object.prototype.hasOwnProperty.call(defaultOptions, option)) {
+            extendedObject[option] = options[option];
+        }
+    });
+
+    return extendedObject;
+}
