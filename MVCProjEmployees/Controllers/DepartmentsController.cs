@@ -38,109 +38,63 @@ namespace MVCProjEmployees.Controllers
             [FromQuery(Name = "page")] int page,
             [FromQuery(Name = "pageSize")] int pageSize,
             [FromQuery(Name = "sort")] string sort,
-            [FromQuery(Name = "filter")] string filter
+            [FromQuery(Name = "filter")] string filter,
+            [FromQuery(Name = "searchString")] string searchString
             )
         {
-            try
-            {
-                page = (page <= 0) ? Constants.PageDefaultOffset : page;
-                pageSize = (pageSize <= 0) ? Constants.PageDefaultLimit : pageSize;
-                sort = sort ?? Constants.PageDefaultSort;
-                filter = filter ?? Constants.DepartmentModelDefaultFilter;
+            page = (page <= 0) ? Constants.PageDefaultOffset : page;
+            pageSize = (pageSize <= 0) ? Constants.PageDefaultLimit : pageSize;
+            sort = sort ?? Constants.PageDefaultSort;
+            filter = filter ?? Constants.DepartmentModelDefaultFilter;
 
-                List<DepartmentModel> departmentList = new List<DepartmentModel>();
-                _departmentService.GetDepartmentsByFilters(page, pageSize, sort, filter)
-                    .ToList()
-                    .ForEach(d =>
+            IQueryable<Department> myQuery =
+                _departmentService
+                .GetDepartmentQuery();
+
+            if (searchString != null && !searchString.Equals(""))
+            {
+                myQuery =
+                    myQuery.Where(e =>
+                        e.DepartmentNumber.ToString().Contains(searchString.ToUpper())
+                        || e.DepartmentName.ToUpper().Contains(searchString.ToUpper())
+                        );
+            }
+
+            List<DepartmentModel> departmentList =
+                myQuery
+                    .OrderByDynamic(filter, sort)
+                    .Skip(page * pageSize)
+                    .Take(pageSize)
+                    .Select(e => new DepartmentModel
                     {
-                        DepartmentModel department = new DepartmentModel
-                        {
-                            DepartmentNumber = d.DepartmentNumber,
-                            DepartmentName = d.DepartmentName
-                        };
-                        departmentList.Add(department);
-                    });
+                        DepartmentName = e.DepartmentName,
+                        DepartmentNumber = e.DepartmentNumber
+                    })
+                    .ToList();
 
-                if (departmentList.Count <= 0)
-                {
-                    return NoContent();
-                }
-
-                return Ok(departmentList);
-            }
-            catch (Exception ex)
+            if (departmentList.Count <= 0)
             {
-                return StatusCode(500, APIResponse.DefaultErrorMessage(ex.Message, 500));
+                return NoContent();
             }
+
+            return Ok(departmentList);
         }
 
         // GET api/departments/{dep-no}
         [HttpGet("{departmentNumber}")]
         public IActionResult GetDepartmentByDepartmentNumber(string departmentNumber)
         {
-            try
+            Department dept = _departmentService.GetOneDepartment(departmentNumber);
+
+            if (dept == null) return NoContent();
+
+            DepartmentModel departmentModel = new DepartmentModel
             {
-                Department dept = _departmentService.GetOneDepartment(departmentNumber);
+                DepartmentNumber = dept.DepartmentNumber,
+                DepartmentName = dept.DepartmentName
+            };
 
-                if (dept == null) return NoContent();
-
-                DepartmentModel departmentModel = new DepartmentModel
-                {
-                    DepartmentNumber = dept.DepartmentNumber,
-                    DepartmentName = dept.DepartmentName
-                };
-
-                return Ok(departmentModel);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, APIResponse.DefaultErrorMessage(ex.Message, 500));
-            }
-        }
-
-        [HttpGet("search")]
-        public IActionResult SearchDepartments(
-            [FromQuery(Name = "page")] int page,
-            [FromQuery(Name = "pageSize")] int pageSize,
-            [FromQuery(Name = "sort")] string sort,
-            [FromQuery(Name = "filter")] string filter,
-            [FromQuery(Name = "searchString")]string searchString
-            )
-        {
-            try
-            {
-                page = (page <= 0) ? Constants.PageDefaultOffset : page;
-                pageSize = (pageSize <= 0) ? Constants.PageDefaultLimit : pageSize;
-
-                List<DepartmentModel> departmentList = new List<DepartmentModel>();
-
-                _departmentService
-                .GetDepartments()
-                    .Where(d =>
-                    d.DepartmentName.ToString().Contains(searchString)
-                    || d.DepartmentNumber.ToString().Contains(searchString)
-                    )
-                    .AsQueryable()
-                    .OrderByDynamic(filter, sort)
-                    .Skip(page * pageSize)
-                    .Take(pageSize)
-                    .ToList()
-                    .ForEach(d =>
-                    {
-                        DepartmentModel department = new DepartmentModel
-                        {
-                            DepartmentNumber = d.DepartmentNumber,
-                            DepartmentName = d.DepartmentName
-                        };
-                        departmentList.Add(department);
-                    });
-
-                return Ok(departmentList);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, APIResponse.DefaultErrorMessage(ex.Message, 500));
-            }
+            return Ok(departmentModel);
         }
 
         // POST api/departments
@@ -192,49 +146,35 @@ namespace MVCProjEmployees.Controllers
             [FromBody]DepartmentModel department
             )
         {
-            try
+            Department departmentToUpdate = new Department
             {
-                Department departmentToUpdate = new Department
-                {
-                    DepartmentNumber = departmentNumber,
-                    DepartmentName = department.DepartmentName
-                };
+                DepartmentNumber = departmentNumber,
+                DepartmentName = department.DepartmentName
+            };
 
-                _departmentService.UpdateDepartment(departmentToUpdate);
+            _departmentService.UpdateDepartment(departmentToUpdate);
 
-                DepartmentModel updatedDepartment = new DepartmentModel
-                {
-                    DepartmentNumber = departmentToUpdate.DepartmentNumber,
-                    DepartmentName = departmentToUpdate.DepartmentName
-                };
-
-                return Ok(updatedDepartment);
-            }
-            catch (Exception ex)
+            DepartmentModel updatedDepartment = new DepartmentModel
             {
-                return StatusCode(500, APIResponse.DefaultErrorMessage(ex.Message, 500));
-            }
+                DepartmentNumber = departmentToUpdate.DepartmentNumber,
+                DepartmentName = departmentToUpdate.DepartmentName
+            };
+
+            return Ok(updatedDepartment);
         }
 
         //// DELETE api/departments/{dep-no}
         [HttpDelete("{departmentNumber}")]
         public IActionResult DeleteDepartment(string departmentNumber)
         {
-            try
-            {
-                int deleteCode = _departmentService.DeleteDepartment(departmentNumber);
+            int deleteCode = _departmentService.DeleteDepartment(departmentNumber);
 
-                if (deleteCode <= 0)
-                {
-                    return NotFound(APIResponse.ApiNotFound());
-                }
-
-                return Ok();
-            }
-            catch (Exception ex)
+            if (deleteCode <= 0)
             {
-                return StatusCode(500, APIResponse.DefaultErrorMessage(ex.Message, 500));
+                return NotFound(APIResponse.ApiNotFound());
             }
+
+            return Ok();
         }
 
         #endregion DEPARTMENTS
@@ -250,55 +190,48 @@ namespace MVCProjEmployees.Controllers
         [FromQuery(Name = "currentlyEmployed")] bool currentlyEmployed
         )
         {
-            try
-            {
-                page = (page <= 0) ? Constants.PageDefaultOffset : page;
-                pageSize = (pageSize <= 0) ? Constants.PageDefaultLimit : pageSize;
-                sort = sort ?? Constants.PageDefaultSort;
-                filter = filter ?? Constants.DepartmentEmplyoeeDefaultFilter;
+            page = (page <= 0) ? Constants.PageDefaultOffset : page;
+            pageSize = (pageSize <= 0) ? Constants.PageDefaultLimit : pageSize;
+            sort = sort ?? Constants.PageDefaultSort;
+            filter = filter ?? Constants.DepartmentEmplyoeeDefaultFilter;
 
-                List<DepartmentEmployeeModel> departmentList = new List<DepartmentEmployeeModel>();
-                _departmentEmployeeService.GetDepartmentEmployees()
-                    .Where(e =>
-                    {
-                        if (currentlyEmployed)
-                        {
-                            return e.ToDate.Equals(Constants.DatabaseDefaultDate);
-                        }
-                        else
-                        {
-                            return true;
-                        }
-                    })
-                    .AsQueryable()
-                    .OrderByDynamic(filter, sort)
-                    .Skip(page * pageSize)
-                    .Take(pageSize)
-                    .ToList()
-                    .ForEach(d =>
-                    {
-                        DepartmentEmployeeModel department = new DepartmentEmployeeModel
-                        {
-                            EmployeeNumber = d.EmployeeNumber,
-                            DepartmentNumber = d.DepartmentNumber,
-                            FromDate = d.FromDate,
-                            ToDate = d.ToDate
-                        };
-
-                        departmentList.Add(department);
-                    });
-
-                if (departmentList.Count <= 0)
+            List<DepartmentEmployeeModel> departmentList = new List<DepartmentEmployeeModel>();
+            _departmentEmployeeService.GetDepartmentEmployees()
+                .Where(e =>
                 {
-                    return NoContent();
-                }
+                    if (currentlyEmployed)
+                    {
+                        return e.ToDate.Equals(Constants.DatabaseDefaultDate);
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                })
+                .AsQueryable()
+                .OrderByDynamic(filter, sort)
+                .Skip(page * pageSize)
+                .Take(pageSize)
+                .ToList()
+                .ForEach(d =>
+                {
+                    DepartmentEmployeeModel department = new DepartmentEmployeeModel
+                    {
+                        EmployeeNumber = d.EmployeeNumber,
+                        DepartmentNumber = d.DepartmentNumber,
+                        FromDate = d.FromDate,
+                        ToDate = d.ToDate
+                    };
 
-                return Ok(departmentList);
-            }
-            catch (Exception ex)
+                    departmentList.Add(department);
+                });
+
+            if (departmentList.Count <= 0)
             {
-                return StatusCode(500, APIResponse.DefaultErrorMessage(ex.Message, 500));
+                return NoContent();
             }
+
+            return Ok(departmentList);
         }
 
         // GET api/departments/{dep-no}
@@ -311,55 +244,48 @@ namespace MVCProjEmployees.Controllers
             [FromQuery(Name = "currentlyEmployed")] bool currentlyEmployed,
             string departmentNumber)
         {
-            try
-            {
-                page = (page <= 0) ? Constants.PageDefaultOffset : page;
-                pageSize = (pageSize <= 0) ? Constants.PageDefaultLimit : pageSize;
-                sort = sort ?? Constants.PageDefaultSort;
-                filter = filter ?? Constants.DepartmentEmplyoeeDefaultFilter;
+            page = (page <= 0) ? Constants.PageDefaultOffset : page;
+            pageSize = (pageSize <= 0) ? Constants.PageDefaultLimit : pageSize;
+            sort = sort ?? Constants.PageDefaultSort;
+            filter = filter ?? Constants.DepartmentEmplyoeeDefaultFilter;
 
-                List<DepartmentEmployeeModel> departmentList = new List<DepartmentEmployeeModel>();
-                _departmentEmployeeService
-                    .GetDepartmentEmployeeByDepartmentNumber(departmentNumber)
-                    .Where(e =>
-                    {
-                        if (currentlyEmployed)
-                        {
-                            return e.ToDate.Equals(Constants.DatabaseDefaultDate);
-                        }
-                        else
-                        {
-                            return true;
-                        }
-                    })
-                    .AsQueryable()
-                    .OrderByDynamic(filter, sort)
-                    .Skip(page * pageSize)
-                    .Take(pageSize)
-                    .ToList()
-                    .ForEach(d =>
-                    {
-                        DepartmentEmployeeModel department = new DepartmentEmployeeModel
-                        {
-                            EmployeeNumber = d.EmployeeNumber,
-                            DepartmentNumber = d.DepartmentNumber,
-                            FromDate = d.FromDate,
-                            ToDate = d.ToDate
-                        };
-                        departmentList.Add(department);
-                    });
-
-                if (departmentList.Count <= 0)
+            List<DepartmentEmployeeModel> departmentList = new List<DepartmentEmployeeModel>();
+            _departmentEmployeeService
+                .GetDepartmentEmployeeByDepartmentNumber(departmentNumber)
+                .Where(e =>
                 {
-                    return NoContent();
-                }
+                    if (currentlyEmployed)
+                    {
+                        return e.ToDate.Equals(Constants.DatabaseDefaultDate);
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                })
+                .AsQueryable()
+                .OrderByDynamic(filter, sort)
+                .Skip(page * pageSize)
+                .Take(pageSize)
+                .ToList()
+                .ForEach(d =>
+                {
+                    DepartmentEmployeeModel department = new DepartmentEmployeeModel
+                    {
+                        EmployeeNumber = d.EmployeeNumber,
+                        DepartmentNumber = d.DepartmentNumber,
+                        FromDate = d.FromDate,
+                        ToDate = d.ToDate
+                    };
+                    departmentList.Add(department);
+                });
 
-                return Ok(departmentList);
-            }
-            catch (Exception ex)
+            if (departmentList.Count <= 0)
             {
-                return StatusCode(500, APIResponse.DefaultErrorMessage(ex.Message, 500));
+                return NoContent();
             }
+
+            return Ok(departmentList);
         }
 
         [HttpGet("employees/employee-departments/{employeeNumber}")]
@@ -372,55 +298,48 @@ namespace MVCProjEmployees.Controllers
                 int employeeNumber
                 )
         {
-            try
-            {
-                page = (page <= 0) ? Constants.PageDefaultOffset : page;
-                pageSize = (pageSize <= 0) ? Constants.PageDefaultLimit : pageSize;
-                sort = sort ?? Constants.PageDefaultSort;
-                filter = filter ?? Constants.DepartmentEmplyoeeDefaultFilter;
+            page = (page <= 0) ? Constants.PageDefaultOffset : page;
+            pageSize = (pageSize <= 0) ? Constants.PageDefaultLimit : pageSize;
+            sort = sort ?? Constants.PageDefaultSort;
+            filter = filter ?? Constants.DepartmentEmplyoeeDefaultFilter;
 
-                List<DepartmentEmployeeModel> departmentList = new List<DepartmentEmployeeModel>();
-                _departmentEmployeeService.GetDepartmentEmployeeByEmployeeNumber(employeeNumber)
-                    .Where(e =>
-                    {
-                        if (currentlyEmployed)
-                        {
-                            return e.ToDate.Equals(Constants.DatabaseDefaultDate);
-                        }
-                        else
-                        {
-                            return true;
-                        }
-                    })
-                    .AsQueryable()
-                    .OrderByDynamic(filter, sort)
-                    .Skip(page * pageSize)
-                    .Take(pageSize)
-                    .ToList()
-                    .ForEach(d =>
-                    {
-                        DepartmentEmployeeModel department = new DepartmentEmployeeModel
-                        {
-                            EmployeeNumber = d.EmployeeNumber,
-                            DepartmentNumber = d.DepartmentNumber,
-                            FromDate = d.FromDate,
-                            ToDate = d.ToDate,
-                            Department = d.Department
-                        };
-                        departmentList.Add(department);
-                    });
-
-                if (departmentList.Count <= 0)
+            List<DepartmentEmployeeModel> departmentList = new List<DepartmentEmployeeModel>();
+            _departmentEmployeeService.GetDepartmentEmployeeByEmployeeNumber(employeeNumber)
+                .Where(e =>
                 {
-                    return NoContent();
-                }
+                    if (currentlyEmployed)
+                    {
+                        return e.ToDate.Equals(Constants.DatabaseDefaultDate);
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                })
+                .AsQueryable()
+                .OrderByDynamic(filter, sort)
+                .Skip(page * pageSize)
+                .Take(pageSize)
+                .ToList()
+                .ForEach(d =>
+                {
+                    DepartmentEmployeeModel department = new DepartmentEmployeeModel
+                    {
+                        EmployeeNumber = d.EmployeeNumber,
+                        DepartmentNumber = d.DepartmentNumber,
+                        FromDate = d.FromDate,
+                        ToDate = d.ToDate,
+                        Department = d.Department
+                    };
+                    departmentList.Add(department);
+                });
 
-                return Ok(departmentList);
-            }
-            catch (Exception ex)
+            if (departmentList.Count <= 0)
             {
-                return StatusCode(500, APIResponse.DefaultErrorMessage(ex.Message, 500));
+                return NoContent();
             }
+
+            return Ok(departmentList);
         }
 
         // POST api/departments
@@ -474,53 +393,39 @@ namespace MVCProjEmployees.Controllers
             [FromBody]DepartmentEmployeeModel department
             )
         {
-            try
+            DepartmentEmployee departmentToUpdate = new DepartmentEmployee
             {
-                DepartmentEmployee departmentToUpdate = new DepartmentEmployee
-                {
-                    EmployeeNumber = employeeNumber,
-                    DepartmentNumber = departmentNumber,
-                    FromDate = department.FromDate,
-                    ToDate = department.ToDate
-                };
+                EmployeeNumber = employeeNumber,
+                DepartmentNumber = departmentNumber,
+                FromDate = department.FromDate,
+                ToDate = department.ToDate
+            };
 
-                _departmentEmployeeService.UpdateDepartmentEmployee(departmentToUpdate);
+            _departmentEmployeeService.UpdateDepartmentEmployee(departmentToUpdate);
 
-                DepartmentEmployeeModel updatedDepartment = new DepartmentEmployeeModel
-                {
-                    EmployeeNumber = departmentToUpdate.EmployeeNumber,
-                    DepartmentNumber = departmentToUpdate.DepartmentNumber,
-                    FromDate = departmentToUpdate.FromDate,
-                    ToDate = departmentToUpdate.ToDate
-                };
-
-                return Ok(updatedDepartment);
-            }
-            catch (Exception ex)
+            DepartmentEmployeeModel updatedDepartment = new DepartmentEmployeeModel
             {
-                return StatusCode(500, APIResponse.DefaultErrorMessage(ex.Message, 500));
-            }
+                EmployeeNumber = departmentToUpdate.EmployeeNumber,
+                DepartmentNumber = departmentToUpdate.DepartmentNumber,
+                FromDate = departmentToUpdate.FromDate,
+                ToDate = departmentToUpdate.ToDate
+            };
+
+            return Ok(updatedDepartment);
         }
 
         //// DELETE api/departments/{dep-no}
         [HttpDelete("{departmentNumber}/employees/{employeeNumber}")]
         public IActionResult DeleteDepartmentEmployee(string departmentNumber, int employeeNumber)
         {
-            try
-            {
-                int deleteCode = _departmentEmployeeService.DeleteDepartmentEmployee(employeeNumber, departmentNumber);
+            int deleteCode = _departmentEmployeeService.DeleteDepartmentEmployee(employeeNumber, departmentNumber);
 
-                if (deleteCode <= 0)
-                {
-                    return NotFound(APIResponse.ApiNotFound());
-                }
-
-                return Ok();
-            }
-            catch (Exception ex)
+            if (deleteCode <= 0)
             {
-                return StatusCode(500, APIResponse.DefaultErrorMessage(ex.Message, 500));
+                return NotFound(APIResponse.ApiNotFound());
             }
+
+            return Ok();
         }
 
         #endregion DEPARTMENT EMPLOYEES
@@ -536,55 +441,48 @@ namespace MVCProjEmployees.Controllers
                 [FromQuery(Name = "currentManagers")] bool currentManagers
                 )
         {
-            try
-            {
-                page = (page <= 0) ? Constants.PageDefaultOffset : page;
-                pageSize = (pageSize <= 0) ? Constants.PageDefaultLimit : pageSize;
-                sort = sort ?? Constants.PageDefaultSort;
-                filter = filter ?? Constants.DepartmentManagerDefaultFilter;
+            page = (page <= 0) ? Constants.PageDefaultOffset : page;
+            pageSize = (pageSize <= 0) ? Constants.PageDefaultLimit : pageSize;
+            sort = sort ?? Constants.PageDefaultSort;
+            filter = filter ?? Constants.DepartmentManagerDefaultFilter;
 
-                List<DepartmentManagerModel> departmentList = new List<DepartmentManagerModel>();
-                _departmentManagerService.GetDepartmentManagers()
-                    .Where(e =>
-                    {
-                        if (currentManagers)
-                        {
-                            return e.ToDate.Equals(Constants.DatabaseDefaultDate);
-                        }
-                        else
-                        {
-                            return true;
-                        }
-                    })
-                    .AsQueryable()
-                    .OrderByDynamic(filter, sort)
-                    .Skip(page * pageSize)
-                    .Take(pageSize)
-                    .ToList()
-                    .ForEach(d =>
-                    {
-                        DepartmentManagerModel department = new DepartmentManagerModel
-                        {
-                            EmployeeNumber = d.EmployeeNumber,
-                            DepartmentNumber = d.DepartmentNumber,
-                            FromDate = d.FromDate,
-                            ToDate = d.ToDate
-                        };
-
-                        departmentList.Add(department);
-                    });
-
-                if (departmentList.Count <= 0)
+            List<DepartmentManagerModel> departmentList = new List<DepartmentManagerModel>();
+            _departmentManagerService.GetDepartmentManagers()
+                .Where(e =>
                 {
-                    return NoContent();
-                }
+                    if (currentManagers)
+                    {
+                        return e.ToDate.Equals(Constants.DatabaseDefaultDate);
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                })
+                .AsQueryable()
+                .OrderByDynamic(filter, sort)
+                .Skip(page * pageSize)
+                .Take(pageSize)
+                .ToList()
+                .ForEach(d =>
+                {
+                    DepartmentManagerModel department = new DepartmentManagerModel
+                    {
+                        EmployeeNumber = d.EmployeeNumber,
+                        DepartmentNumber = d.DepartmentNumber,
+                        FromDate = d.FromDate,
+                        ToDate = d.ToDate
+                    };
 
-                return Ok(departmentList);
-            }
-            catch (Exception ex)
+                    departmentList.Add(department);
+                });
+
+            if (departmentList.Count <= 0)
             {
-                return StatusCode(500, APIResponse.DefaultErrorMessage(ex.Message, 500));
+                return NoContent();
             }
+
+            return Ok(departmentList);
         }
 
         // GET api/departments/{dep-no}
@@ -598,55 +496,48 @@ namespace MVCProjEmployees.Controllers
         string departmentNumber
         )
         {
-            try
-            {
-                page = (page <= 0) ? Constants.PageDefaultOffset : page;
-                pageSize = (pageSize <= 0) ? Constants.PageDefaultLimit : pageSize;
-                sort = sort ?? Constants.PageDefaultSort;
-                filter = filter ?? Constants.DepartmentManagerDefaultFilter;
+            page = (page <= 0) ? Constants.PageDefaultOffset : page;
+            pageSize = (pageSize <= 0) ? Constants.PageDefaultLimit : pageSize;
+            sort = sort ?? Constants.PageDefaultSort;
+            filter = filter ?? Constants.DepartmentManagerDefaultFilter;
 
-                List<DepartmentManagerModel> departmentList = new List<DepartmentManagerModel>();
-                _departmentManagerService.GetDepartmentManagerByDepartmentNumber(departmentNumber)
-                    .Where(e =>
-                    {
-                        if (currentManagers)
-                        {
-                            return e.ToDate.Equals(Constants.DatabaseDefaultDate);
-                        }
-                        else
-                        {
-                            return true;
-                        }
-                    })
-                    .AsQueryable()
-                    .OrderByDynamic(filter, sort)
-                    .Skip(page * pageSize)
-                    .Take(pageSize)
-                    .ToList()
-                    .ForEach(d =>
-                    {
-                        DepartmentManagerModel department = new DepartmentManagerModel
-                        {
-                            EmployeeNumber = d.EmployeeNumber,
-                            DepartmentNumber = d.DepartmentNumber,
-                            FromDate = d.FromDate,
-                            ToDate = d.ToDate
-                        };
-
-                        departmentList.Add(department);
-                    });
-
-                if (departmentList.Count <= 0)
+            List<DepartmentManagerModel> departmentList = new List<DepartmentManagerModel>();
+            _departmentManagerService.GetDepartmentManagerByDepartmentNumber(departmentNumber)
+                .Where(e =>
                 {
-                    return NoContent();
-                }
+                    if (currentManagers)
+                    {
+                        return e.ToDate.Equals(Constants.DatabaseDefaultDate);
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                })
+                .AsQueryable()
+                .OrderByDynamic(filter, sort)
+                .Skip(page * pageSize)
+                .Take(pageSize)
+                .ToList()
+                .ForEach(d =>
+                {
+                    DepartmentManagerModel department = new DepartmentManagerModel
+                    {
+                        EmployeeNumber = d.EmployeeNumber,
+                        DepartmentNumber = d.DepartmentNumber,
+                        FromDate = d.FromDate,
+                        ToDate = d.ToDate
+                    };
 
-                return Ok(departmentList);
-            }
-            catch (Exception ex)
+                    departmentList.Add(department);
+                });
+
+            if (departmentList.Count <= 0)
             {
-                return StatusCode(500, APIResponse.DefaultErrorMessage(ex.Message, 500));
+                return NoContent();
             }
+
+            return Ok(departmentList);
         }
 
         [HttpGet("managers/manager-departments/{employeeNumber}")]
@@ -659,54 +550,47 @@ namespace MVCProjEmployees.Controllers
                 int employeeNumber
                 )
         {
-            try
-            {
-                page = (page <= 0) ? Constants.PageDefaultOffset : page;
-                pageSize = (pageSize <= 0) ? Constants.PageDefaultLimit : pageSize;
-                sort = sort ?? Constants.PageDefaultSort;
-                filter = filter ?? Constants.DepartmentManagerDefaultFilter;
+            page = (page <= 0) ? Constants.PageDefaultOffset : page;
+            pageSize = (pageSize <= 0) ? Constants.PageDefaultLimit : pageSize;
+            sort = sort ?? Constants.PageDefaultSort;
+            filter = filter ?? Constants.DepartmentManagerDefaultFilter;
 
-                List<DepartmentManagerModel> departmentList = new List<DepartmentManagerModel>();
-                _departmentManagerService.GetDepartmentManagerByEmployeeNumber(employeeNumber)
-                    .Where(e =>
-                    {
-                        if (currentManagers)
-                        {
-                            return e.ToDate.Equals(Constants.DatabaseDefaultDate);
-                        }
-                        else
-                        {
-                            return true;
-                        }
-                    })
-                    .AsQueryable()
-                    .OrderByDynamic(filter, sort)
-                    .Skip(page * pageSize)
-                    .Take(pageSize)
-                    .ToList()
-                    .ForEach(d =>
-                    {
-                        DepartmentManagerModel department = new DepartmentManagerModel
-                        {
-                            EmployeeNumber = d.EmployeeNumber,
-                            DepartmentNumber = d.DepartmentNumber,
-                            FromDate = d.FromDate,
-                            ToDate = d.ToDate
-                        };
-                        departmentList.Add(department);
-                    });
-
-                if (departmentList.Count <= 0)
+            List<DepartmentManagerModel> departmentList = new List<DepartmentManagerModel>();
+            _departmentManagerService.GetDepartmentManagerByEmployeeNumber(employeeNumber)
+                .Where(e =>
                 {
-                    return NoContent();
-                }
+                    if (currentManagers)
+                    {
+                        return e.ToDate.Equals(Constants.DatabaseDefaultDate);
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                })
+                .AsQueryable()
+                .OrderByDynamic(filter, sort)
+                .Skip(page * pageSize)
+                .Take(pageSize)
+                .ToList()
+                .ForEach(d =>
+                {
+                    DepartmentManagerModel department = new DepartmentManagerModel
+                    {
+                        EmployeeNumber = d.EmployeeNumber,
+                        DepartmentNumber = d.DepartmentNumber,
+                        FromDate = d.FromDate,
+                        ToDate = d.ToDate
+                    };
+                    departmentList.Add(department);
+                });
 
-                return Ok(departmentList);
-            }
-            catch (Exception ex)
+            if (departmentList.Count <= 0)
             {
-                return StatusCode(500, APIResponse.DefaultErrorMessage(ex.Message, 500));
+                return NoContent();
             }
+
+            return Ok(departmentList);
         }
 
         // POST api/departments
@@ -760,53 +644,39 @@ namespace MVCProjEmployees.Controllers
             [FromBody]DepartmentManagerModel department
             )
         {
-            try
+            DepartmentManager departmentToUpdate = new DepartmentManager
             {
-                DepartmentManager departmentToUpdate = new DepartmentManager
-                {
-                    EmployeeNumber = employeeNumber,
-                    DepartmentNumber = departmentNumber,
-                    FromDate = department.FromDate,
-                    ToDate = department.ToDate
-                };
+                EmployeeNumber = employeeNumber,
+                DepartmentNumber = departmentNumber,
+                FromDate = department.FromDate,
+                ToDate = department.ToDate
+            };
 
-                _departmentManagerService.UpdateDepartmentManager(departmentToUpdate);
+            _departmentManagerService.UpdateDepartmentManager(departmentToUpdate);
 
-                DepartmentManagerModel updatedDepartment = new DepartmentManagerModel
-                {
-                    EmployeeNumber = departmentToUpdate.EmployeeNumber,
-                    DepartmentNumber = departmentToUpdate.DepartmentNumber,
-                    FromDate = departmentToUpdate.FromDate,
-                    ToDate = departmentToUpdate.ToDate
-                };
-
-                return Ok(updatedDepartment);
-            }
-            catch (Exception ex)
+            DepartmentManagerModel updatedDepartment = new DepartmentManagerModel
             {
-                return StatusCode(500, APIResponse.DefaultErrorMessage(ex.Message, 500));
-            }
+                EmployeeNumber = departmentToUpdate.EmployeeNumber,
+                DepartmentNumber = departmentToUpdate.DepartmentNumber,
+                FromDate = departmentToUpdate.FromDate,
+                ToDate = departmentToUpdate.ToDate
+            };
+
+            return Ok(updatedDepartment);
         }
 
         //// DELETE api/departments/{dep-no}
         [HttpDelete("{departmentNumber}/managers/{employeeNumber}")]
         public IActionResult DeleteDepartmentManager(string departmentNumber, int employeeNumber)
         {
-            try
-            {
-                int deleteCode = _departmentManagerService.DeleteDepartmentManager(employeeNumber, departmentNumber);
+            int deleteCode = _departmentManagerService.DeleteDepartmentManager(employeeNumber, departmentNumber);
 
-                if (deleteCode <= 0)
-                {
-                    return NotFound(APIResponse.ApiNotFound());
-                }
-
-                return Ok();
-            }
-            catch (Exception ex)
+            if (deleteCode <= 0)
             {
-                return StatusCode(500, APIResponse.DefaultErrorMessage(ex.Message, 500));
+                return NotFound(APIResponse.ApiNotFound());
             }
+
+            return Ok();
         }
 
         #endregion DEPARTMENT MANAGERS

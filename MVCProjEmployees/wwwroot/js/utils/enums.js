@@ -8,13 +8,6 @@
     DEPARTMENT_MANAGER: 6
 }
 
-let QUERY_TYPES = {
-    INVALID_QUERY: 0,
-    NORMAL_QUERY: 1,
-    SEARCH_QUERY: 2
-}
-
 Object.freeze(ENTITY_TYPES);
-Object.freeze(QUERY_TYPES);
 
-export { ENTITY_TYPES, QUERY_TYPES };
+export { ENTITY_TYPES };

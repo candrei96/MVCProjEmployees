@@ -1,5 +1,5 @@
 ﻿import constants from '../utils/constants.js';
-import { ENTITY_TYPES, QUERY_TYPES } from '../utils/enums.js';
+import { ENTITY_TYPES } from '../utils/enums.js';
 
 let controller = (function () {
     let instance;
@@ -80,7 +80,7 @@ let controller = (function () {
         return resultedData;
     }
 
-    ApiController.prototype.getEntity = async function (entityType, queryParameters) {
+    ApiController.prototype.getEntity = async function (entityType, queryParameters, searchString) {
         let requestUrl;
         
         queryParameters = queryParameters || {};
@@ -89,6 +89,7 @@ let controller = (function () {
         queryParameters.pageSize = queryParameters.pageSize || constants.QUERY_PARAMETER_DEFAULT_PAGE_SIZE;
         queryParameters.filter = queryParameters.filter || constants.QUERY_PARAMETER_DEFAULT_FILTER;
         queryParameters.sort = queryParameters.sort || constants.QUERY_PARAMETER_DEFAULT_SORT;
+        queryParameters.searchString = searchString || '';
 
         switch (parseInt(entityType)) {
             case ENTITY_TYPES.EMPLOYEE:
@@ -104,7 +105,7 @@ let controller = (function () {
                 throw new Error('Invalid entity type.');
         }
 
-        requestUrl += `?page=${queryParameters.page}&pageSize=${queryParameters.pageSize}&filter=${queryParameters.filter}&sort=${queryParameters.sort}`;
+        requestUrl += `?page=${queryParameters.page}&pageSize=${queryParameters.pageSize}&filter=${queryParameters.filter}&sort=${queryParameters.sort}&searchString=${queryParameters.searchString}`;
 
         const resultedData = await $.ajax({
             url: requestUrl,
@@ -112,47 +113,47 @@ let controller = (function () {
             method: 'GET'
         });
 
-        window.sessionStorage.setItem(constants.LAST_QUERY_STATE, QUERY_TYPES.NORMAL_QUERY);
+        // window.sessionStorage.setItem(constants.LAST_QUERY_STATE, QUERY_TYPES.NORMAL_QUERY);
 
         return resultedData;
     }
 
-    ApiController.prototype.searchEntity = async function (entityType, queryParameters, searchString) {
-        let requestUrl;
+    //ApiController.prototype.searchEntity = async function (entityType, queryParameters, searchString) {
+    //    let requestUrl;
 
-        queryParameters = queryParameters || {};
+    //    queryParameters = queryParameters || {};
 
-        queryParameters.page = queryParameters.page || constants.QUERY_PARAMETER_DEFAULT_PAGE;
-        queryParameters.pageSize = queryParameters.pageSize || constants.QUERY_PARAMETER_DEFAULT_PAGE_SIZE;
-        queryParameters.filter = queryParameters.filter || constants.QUERY_PARAMETER_DEFAULT_FILTER;
-        queryParameters.sort = queryParameters.sort || constants.QUERY_PARAMETER_DEFAULT_SORT;
+    //    queryParameters.page = queryParameters.page || constants.QUERY_PARAMETER_DEFAULT_PAGE;
+    //    queryParameters.pageSize = queryParameters.pageSize || constants.QUERY_PARAMETER_DEFAULT_PAGE_SIZE;
+    //    queryParameters.filter = queryParameters.filter || constants.QUERY_PARAMETER_DEFAULT_FILTER;
+    //    queryParameters.sort = queryParameters.sort || constants.QUERY_PARAMETER_DEFAULT_SORT;
 
-        switch (parseInt(entityType)) {
-            case ENTITY_TYPES.EMPLOYEE:
-                requestUrl = `${this.options.API_URL}/api/employees/search`;
-                break;
-            case ENTITY_TYPES.DEPARTMENT:
-                requestUrl = `${this.options.API_URL}/api/departments/search`;
-                break;
-            case ENTITY_TYPES.SALARY:
-                requestUrl = `${this.options.API_URL}/api/employees/salaries/search`;
-                break;
-            default:
-                throw new Error('Invalid entity type.');
-        }
+    //    switch (parseInt(entityType)) {
+    //        case ENTITY_TYPES.EMPLOYEE:
+    //            requestUrl = `${this.options.API_URL}/api/employees/search`;
+    //            break;
+    //        case ENTITY_TYPES.DEPARTMENT:
+    //            requestUrl = `${this.options.API_URL}/api/departments/search`;
+    //            break;
+    //        case ENTITY_TYPES.SALARY:
+    //            requestUrl = `${this.options.API_URL}/api/employees/salaries/search`;
+    //            break;
+    //        default:
+    //            throw new Error('Invalid entity type.');
+    //    }
 
-        requestUrl += `?page=${queryParameters.page}&pageSize=${queryParameters.pageSize}&filter=${queryParameters.filter}&sort=${queryParameters.sort}&searchString=${searchString}`;
+    //    requestUrl += `?page=${queryParameters.page}&pageSize=${queryParameters.pageSize}&filter=${queryParameters.filter}&sort=${queryParameters.sort}&searchString=${searchString}`;
 
-        const resultedData = await $.ajax({
-            url: requestUrl,
-            contentType: 'application/json; charset=UTF-8',
-            method: 'GET'
-        });
+    //    const resultedData = await $.ajax({
+    //        url: requestUrl,
+    //        contentType: 'application/json; charset=UTF-8',
+    //        method: 'GET'
+    //    });
 
-        window.sessionStorage.setItem(constants.LAST_QUERY_STATE, QUERY_TYPES.SEARCH_QUERY);
+    //    window.sessionStorage.setItem(constants.LAST_QUERY_STATE, QUERY_TYPES.SEARCH_QUERY);
 
-        return resultedData;
-    }
+    //    return resultedData;
+    //}
 
     ApiController.prototype.createEntity = async function (entityType, body) {
         let requestUrl;

@@ -290,6 +290,10 @@ header {
     position: relative;
 }
 
+    .main-body-page .main-list-page .main-body-page-header .options-crumble-menu-option:hover {
+        cursor: pointer;
+    }
+
 .main-body-page .loader {
     position: absolute;
     left: 60%;
@@ -591,42 +595,41 @@ header {
                 margin-left: 10%;
             }
 
-        .plugin-added-table-ui-container .table-plugin-footer-ui {
+    .plugin-added-table-ui-container .table-plugin-footer-ui {
+    }
 
+        .plugin-added-table-ui-container .table-plugin-footer-ui button {
+            border: 0.5px solid #E6E7EA;
+            background: #EBECEF;
+            float: left;
+            width: 3%;
+            padding: 0;
+            height: 2.5rem;
         }
 
-            .plugin-added-table-ui-container .table-plugin-footer-ui button {
-                border: 0.5px solid #E6E7EA;
-                background: #EBECEF;
-                float: left;
-                width: 3%;
-                padding: 0;
-                height: 2.5rem;
-            }
+        .plugin-added-table-ui-container .table-plugin-footer-ui .ui-table-plugin-dropdown {
+            width: 8%;
+            height: 2.5rem;
+            margin-left: 4.5%;
+            display: inline-block;
+        }
 
-            .plugin-added-table-ui-container .table-plugin-footer-ui .ui-table-plugin-dropdown {
-                width: 8%;
-                height: 2.5rem;
-                margin-left: 4.5%;
-                display: inline-block;
-            }
+        .plugin-added-table-ui-container .table-plugin-footer-ui .select-label-text {
+            display: inline-block;
+            margin-left: 1%;
+        }
 
-            .plugin-added-table-ui-container .table-plugin-footer-ui .select-label-text {
-                display: inline-block;
-                margin-left: 1%;
-            }
+        .plugin-added-table-ui-container .table-plugin-footer-ui .table-plugin-page-counter {
+            display: inline;
+            background-color: #004F7B;
+            float: left;
+            width: 3%;
+            height: 2.5rem;
+            padding: 0;
+            text-align: center;
+            line-height: 35px;
+        }
 
-            .plugin-added-table-ui-container .table-plugin-footer-ui .table-plugin-page-counter {
-                display: inline;
-                background-color: #004F7B;
-                float: left;
-                width: 3%;
-                height: 2.5rem;
-                padding: 0;
-                text-align: center;
-                line-height: 35px;
+            .plugin-added-table-ui-container .table-plugin-footer-ui .table-plugin-page-counter span {
+                color: white;
             }
-
-                .plugin-added-table-ui-container .table-plugin-footer-ui .table-plugin-page-counter span {
-                    color: white;
-                }
